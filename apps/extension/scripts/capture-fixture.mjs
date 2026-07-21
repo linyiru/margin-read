@@ -366,36 +366,37 @@ function stripComments(html) {
   return html.replace(/<!--[\s\S]*?-->/g, "");
 }
 
+const VOLATILE_ATTRIBUTE_NAME_PATTERN =
+  /^(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style|data-margin-[a-z0-9-]+|data-reactroot|data-reactid|data-nextjs-router|data-hydration-on-demand)$/i;
+
 function stripVolatileAttributes(html) {
-  // Removing an attribute can splice surrounding text into a new strippable
-  // attribute (e.g. ` on onclick="…"click="…"`), so repeat until stable
-  // instead of trusting a single pass (CodeQL js/incomplete-multi-character-sanitization).
-  let result = html;
-  let previous;
-  do {
-    previous = result;
-    result = previous
-      .replace(/\sdata-margin-[a-z0-9-]+=(?:"[^"]*"|'[^']*')/gi, "")
-      .replace(
-        /\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)="[^"]*"/gi,
-        ""
-      )
-      .replace(
-        /\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)='[^']*'/gi,
-        ""
-      )
-      .replace(
-        /\s(?:data-reactroot|data-reactid|data-nextjs-router|data-hydration-on-demand)="[^"]*"/gi,
-        ""
-      );
-  } while (result !== previous);
-  return result.replace(
-    /\s(href|src)="https?:\/\/([^/"?#]+)([^"?#]*)[^"]*"/gi,
-    (_match, attribute, host, pathname) => {
-      const safePath = pathname && pathname !== "/" ? pathname : "";
-      return ` ${attribute}="https://${host}${safePath}"`;
-    }
-  );
+  // Rebuild each opening tag from parsed attribute tokens and drop volatile
+  // ones by exact name match, rather than deleting substrings from the whole
+  // document — substring deletion can splice surrounding text into a new
+  // strippable attribute and needs repeated passes to be safe.
+  return html
+    .replace(
+      /<([a-zA-Z][^\s/>]*)((?:[^>"']|"[^"]*"|'[^']*')*?)(\/?)>/g,
+      (_match, tagName, attributeText, selfClosing) => {
+        const kept = [];
+        const attributePattern = /([^\s"'>/=]+)(\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*))?/g;
+        let attribute;
+        while ((attribute = attributePattern.exec(attributeText)) !== null) {
+          if (!VOLATILE_ATTRIBUTE_NAME_PATTERN.test(attribute[1])) {
+            kept.push(attribute[0]);
+          }
+        }
+        const attributes = kept.length > 0 ? ` ${kept.join(" ")}` : "";
+        return `<${tagName}${attributes}${selfClosing}>`;
+      }
+    )
+    .replace(
+      /\s(href|src)="https?:\/\/([^/"?#]+)([^"?#]*)[^"]*"/gi,
+      (_match, attribute, host, pathname) => {
+        const safePath = pathname && pathname !== "/" ? pathname : "";
+        return ` ${attribute}="https://${host}${safePath}"`;
+      }
+    );
 }
 
 function normalizeWhitespace(html) {
