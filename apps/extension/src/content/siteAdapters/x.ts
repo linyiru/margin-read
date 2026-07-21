@@ -1,4 +1,5 @@
 import { countCodePoints } from "../../shared/text";
+import { matchesSelector } from "../dom";
 import type { TextBlockOptions } from "../textBlocks";
 import {
   getBaseMinimumTextLength,
@@ -90,7 +91,7 @@ function getTranslatableTweetTextBlocks(
 }
 
 function isArticleTextBlock(element: HTMLElement, options: TextBlockOptions): boolean {
-  if (element.matches("section") || element.closest("section[contenteditable='false']")) {
+  if (matchesSelector(element, "section") || element.closest("section[contenteditable='false']")) {
     return false;
   }
 

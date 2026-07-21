@@ -1,4 +1,5 @@
 import { normalizeText } from "../shared/text";
+import { matchesSelector } from "./dom";
 import { isAccessibilityOnlyElement, isPageChromeElement } from "./readingVisibility";
 
 export type BlockCandidateSource = "semantic" | "archetype" | "adapter" | "legacy";
@@ -97,7 +98,7 @@ export function inferBlockRole(element: HTMLElement): BlockCandidateRole {
     return "definition";
   }
 
-  if (element.matches("figcaption")) {
+  if (matchesSelector(element, "figcaption")) {
     return "caption";
   }
 

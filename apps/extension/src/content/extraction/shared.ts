@@ -11,6 +11,7 @@ import {
   type BlockCandidate,
   type BlockCandidateSource
 } from "../blockCandidates";
+import { matchesSelector } from "../dom";
 import { isNonReadingElement, isVisibleForReading } from "../readingVisibility";
 import type { TextBlockOptions } from "./types";
 
@@ -364,7 +365,7 @@ function getStructuralMinimumTextLength(element: HTMLElement, text: string, opti
   if (element.matches("td")) {
     return 4;
   }
-  if (element.matches("dt")) {
+  if (matchesSelector(element, "dt")) {
     return 2;
   }
   if (element.matches("li, dd")) {
