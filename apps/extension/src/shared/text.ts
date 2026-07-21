@@ -26,7 +26,7 @@ const LETTER_PATTERN = /\p{L}/u;
 // Code-point count rather than UTF-16 code-unit count, so supplementary-plane characters
 // (rare ideographs, emoji) count as one rather than two.
 export function countCodePoints(value: string): number {
-  return [...value].length;
+  return Array.from(value).length;
 }
 
 // Fraction of letters that are CJK. The denominator counts only letters (not punctuation,

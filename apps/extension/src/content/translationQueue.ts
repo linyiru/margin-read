@@ -36,7 +36,7 @@ export class TranslationQueue<T> {
         this.#pending.set(item.id, item);
       }
     }
-    void this.#drain();
+    this.#drain();
   }
 
   clear(): void {
@@ -51,7 +51,7 @@ export class TranslationQueue<T> {
     if (options.concurrency !== undefined) {
       this.#concurrency = options.concurrency;
     }
-    void this.#drain();
+    this.#drain();
   }
 
   get size(): number {

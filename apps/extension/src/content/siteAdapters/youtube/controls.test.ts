@@ -758,8 +758,8 @@ describe("initializeYouTubeControls", () => {
       ([message]) => (message as { type?: string } | undefined)?.type === "TRANSLATE_BATCH"
     ).slice(callsBeforeTrack);
     expect(captionCalls).toHaveLength(2);
-    expect((captionCalls[0]?.[0] as { segments: unknown[] }).segments).toHaveLength(32);
-    expect((captionCalls[1]?.[0] as { segments: unknown[] }).segments).toHaveLength(1);
+    expect((captionCalls[0][0] as { segments: unknown[] }).segments).toHaveLength(32);
+    expect((captionCalls[1][0] as { segments: unknown[] }).segments).toHaveLength(1);
   });
 
   it("hides the caption overlay when captions disappear", async () => {

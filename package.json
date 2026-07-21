@@ -22,14 +22,12 @@
     "version:set": "node apps/extension/scripts/set-version.mjs"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/chrome": "^0.0.268",
     "@vitest/coverage-v8": "^4.1.5",
-    "eslint": "^10.3.0",
-    "globals": "^17.6.0",
     "happy-dom": "^20.9.0",
+    "oxlint": "^1.74.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "typescript": "^7.0.2",
-    "typescript-eslint": "^8.59.2",
     "vitest": "^4.1.5"
   }
 }
