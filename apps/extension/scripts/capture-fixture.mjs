@@ -367,27 +367,35 @@ function stripComments(html) {
 }
 
 function stripVolatileAttributes(html) {
-  return html
-    .replace(/\sdata-margin-[a-z0-9-]+=(?:"[^"]*"|'[^']*')/gi, "")
-    .replace(
-      /\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)="[^"]*"/gi,
-      ""
-    )
-    .replace(
-      /\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)='[^']*'/gi,
-      ""
-    )
-    .replace(
-      /\s(?:data-reactroot|data-reactid|data-nextjs-router|data-hydration-on-demand)="[^"]*"/gi,
-      ""
-    )
-    .replace(
-      /\s(href|src)="https?:\/\/([^/"?#]+)([^"?#]*)[^"]*"/gi,
-      (_match, attribute, host, pathname) => {
-        const safePath = pathname && pathname !== "/" ? pathname : "";
-        return ` ${attribute}="https://${host}${safePath}"`;
-      }
-    );
+  // Removing an attribute can splice surrounding text into a new strippable
+  // attribute (e.g. ` on onclick="…"click="…"`), so repeat until stable
+  // instead of trusting a single pass (CodeQL js/incomplete-multi-character-sanitization).
+  let result = html;
+  let previous;
+  do {
+    previous = result;
+    result = previous
+      .replace(/\sdata-margin-[a-z0-9-]+=(?:"[^"]*"|'[^']*')/gi, "")
+      .replace(
+        /\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)="[^"]*"/gi,
+        ""
+      )
+      .replace(
+        /\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)='[^']*'/gi,
+        ""
+      )
+      .replace(
+        /\s(?:data-reactroot|data-reactid|data-nextjs-router|data-hydration-on-demand)="[^"]*"/gi,
+        ""
+      );
+  } while (result !== previous);
+  return result.replace(
+    /\s(href|src)="https?:\/\/([^/"?#]+)([^"?#]*)[^"]*"/gi,
+    (_match, attribute, host, pathname) => {
+      const safePath = pathname && pathname !== "/" ? pathname : "";
+      return ` ${attribute}="https://${host}${safePath}"`;
+    }
+  );
 }
 
 function normalizeWhitespace(html) {
