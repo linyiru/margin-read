@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { applyTranslationLayout, classifyTranslationLayout, shouldMirrorBlockLayout } from "./layoutStrategy";
+import {
+  applyTranslationLayout,
+  classifyTranslationLayout,
+  shouldMirrorBlockLayout
+} from "./layoutStrategy";
 
 describe("shouldMirrorBlockLayout", () => {
   it("mirrors centered article blocks inside wider parents", () => {
@@ -67,7 +71,8 @@ describe("classifyTranslationLayout", () => {
 describe("applyTranslationLayout", () => {
   it("keeps Quartr-style centered article translations aligned with the source column", () => {
     const source = createElement({
-      className: "quik_text_quik_text__w6RJ0 quik-size-bodyLarge mx-auto w-full max-w-160 text-quik_textReading",
+      className:
+        "quik_text_quik_text__w6RJ0 quik-size-bodyLarge mx-auto w-full max-w-160 text-quik_textReading",
       sourceRect: rect({ width: 640 }),
       parentRect: rect({ width: 1168 }),
       sourceStyle: style({
@@ -158,7 +163,17 @@ function createElement({
 }
 
 function rect({ width }: { width: number }): DOMRectReadOnly {
-  return { bottom: 0, height: 0, left: 0, right: width, top: 0, width, x: 0, y: 0, toJSON: () => ({}) };
+  return {
+    bottom: 0,
+    height: 0,
+    left: 0,
+    right: width,
+    top: 0,
+    width,
+    x: 0,
+    y: 0,
+    toJSON: () => ({})
+  };
 }
 
 function style(overrides: Partial<CSSStyleDeclaration>): CSSStyleDeclaration {

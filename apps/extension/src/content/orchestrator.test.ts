@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_SETTINGS } from "../shared/defaults";
 import type { LocalTranslationProviderId } from "../shared/localProviders";
-import type { ExtensionSettings, RuntimeMessage, TextSegment, TranslationResult } from "../shared/types";
+import type {
+  ExtensionSettings,
+  RuntimeMessage,
+  TextSegment,
+  TranslationResult
+} from "../shared/types";
 import { createOrchestrator, type ContentOrchestrator } from "./orchestrator";
 import { TRANSLATION_CLASS, TRANSLATED_ATTR } from "./translationRenderer";
 
@@ -118,7 +123,9 @@ beforeEach(() => {
   onEnabledChange = vi.fn<(enabled: boolean) => void>();
   sendMessageMock = vi.fn<SendMessageImpl>(makeRouter());
 
-  vi.stubGlobal("chrome", { runtime: { sendMessage: sendMessageMock, getManifest: () => ({ version: "0.3.2" }) } });
+  vi.stubGlobal("chrome", {
+    runtime: { sendMessage: sendMessageMock, getManifest: () => ({ version: "0.3.2" }) }
+  });
   vi.stubGlobal("window", {
     getComputedStyle: stubComputedStyle,
     innerHeight: VIEWPORT_HEIGHT,
@@ -277,7 +284,10 @@ describe("createOrchestrator — error paths", () => {
   });
 
   it("flags blocks the provider did not return translations for", async () => {
-    const paragraphs = Array.from({ length: 3 }, (_, i) => `${SAMPLE_PARAGRAPH} (paragraph ${i + 1})`);
+    const paragraphs = Array.from(
+      { length: 3 },
+      (_, i) => `${SAMPLE_PARAGRAPH} (paragraph ${i + 1})`
+    );
     seedDocument(`<main>${paragraphs.map((text) => `<p>${text}</p>`).join("")}</main>`);
 
     useRouter({
@@ -317,7 +327,10 @@ describe("createOrchestrator — provider-specific queue", () => {
 
       const batches = sendMessageMock.mock.calls
         .map(([msg]) => msg)
-        .filter((msg): msg is Extract<RuntimeMessage, { type: "TRANSLATE_BATCH" }> => msg.type === "TRANSLATE_BATCH")
+        .filter(
+          (msg): msg is Extract<RuntimeMessage, { type: "TRANSLATE_BATCH" }> =>
+            msg.type === "TRANSLATE_BATCH"
+        )
         .map((msg) => msg.segments.length);
       expect(batches.length).toBeGreaterThanOrEqual(2);
       expect(Math.max(...batches)).toBeLessThanOrEqual(3);
@@ -410,7 +423,9 @@ describe("createOrchestrator — X longform articles", () => {
 
     await new Promise((resolve) => setTimeout(resolve, DEBOUNCE_QUIESCE_MS));
 
-    expect(document.querySelectorAll(`.${TRANSLATION_CLASS}`).length).toBe(translationsAfterFirstPass);
+    expect(document.querySelectorAll(`.${TRANSLATION_CLASS}`).length).toBe(
+      translationsAfterFirstPass
+    );
   });
 });
 
@@ -471,8 +486,14 @@ describe("createOrchestrator — viewport prioritisation", () => {
     );
 
     setRect(document.getElementById("inview") as HTMLElement, { top: 100, bottom: 200 });
-    setRect(document.getElementById("near") as HTMLElement, { top: NEAR_VIEWPORT_TOP, bottom: NEAR_VIEWPORT_TOP + 100 });
-    setRect(document.getElementById("far") as HTMLElement, { top: FAR_VIEWPORT_TOP, bottom: FAR_VIEWPORT_TOP + 100 });
+    setRect(document.getElementById("near") as HTMLElement, {
+      top: NEAR_VIEWPORT_TOP,
+      bottom: NEAR_VIEWPORT_TOP + 100
+    });
+    setRect(document.getElementById("far") as HTMLElement, {
+      top: FAR_VIEWPORT_TOP,
+      bottom: FAR_VIEWPORT_TOP + 100
+    });
 
     const orchestrator = createTestOrchestrator();
     await orchestrator.setEnabled(true);
@@ -515,7 +536,9 @@ describe("createOrchestrator — debug state plumbing", () => {
 
     const debug = orchestrator.getDebugState();
     expect(debug.lastProviderRequestStartedAt).toBeGreaterThan(0);
-    expect(debug.lastProviderRequestFinishedAt).toBeGreaterThanOrEqual(debug.lastProviderRequestStartedAt ?? 0);
+    expect(debug.lastProviderRequestFinishedAt).toBeGreaterThanOrEqual(
+      debug.lastProviderRequestStartedAt ?? 0
+    );
     expect(debug.lastProviderDurationMs).toBe(
       (debug.lastProviderRequestFinishedAt ?? 0) - (debug.lastProviderRequestStartedAt ?? 0)
     );
@@ -528,7 +551,8 @@ describe("createOrchestrator — debug state plumbing", () => {
         debugMode: true,
         provider: "google",
         model: "gemini-1.5-flash",
-        providerEndpoint: "https://user:pass@generativelanguage.googleapis.com/v1beta/models?key=secret#fragment"
+        providerEndpoint:
+          "https://user:pass@generativelanguage.googleapis.com/v1beta/models?key=secret#fragment"
       }
     });
 

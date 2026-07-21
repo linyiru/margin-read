@@ -38,7 +38,10 @@ function decodePayload(json: string): TranslationPayload {
 describe("buildTranslationPayload", () => {
   it("encodes target and source language alongside segments", () => {
     const payload = decodePayload(
-      buildTranslationPayload(segments, makeSettings({ sourceLanguage: "English", targetLanguage: "繁體中文" }))
+      buildTranslationPayload(
+        segments,
+        makeSettings({ sourceLanguage: "English", targetLanguage: "繁體中文" })
+      )
     );
 
     expect(payload).toMatchObject({
@@ -49,19 +52,25 @@ describe("buildTranslationPayload", () => {
   });
 
   it("normalizes 'auto' to a descriptive label", () => {
-    const payload = decodePayload(buildTranslationPayload(segments, makeSettings({ sourceLanguage: "auto" })));
+    const payload = decodePayload(
+      buildTranslationPayload(segments, makeSettings({ sourceLanguage: "auto" }))
+    );
 
     expect(payload.sourceLanguage).toBe("auto-detected source language");
   });
 
   it("treats mixed-case 'AUTO' as auto", () => {
-    const payload = decodePayload(buildTranslationPayload(segments, makeSettings({ sourceLanguage: " AUTO " })));
+    const payload = decodePayload(
+      buildTranslationPayload(segments, makeSettings({ sourceLanguage: " AUTO " }))
+    );
 
     expect(payload.sourceLanguage).toBe("auto-detected source language");
   });
 
   it("trims explicit source language values", () => {
-    const payload = decodePayload(buildTranslationPayload(segments, makeSettings({ sourceLanguage: "  Japanese  " })));
+    const payload = decodePayload(
+      buildTranslationPayload(segments, makeSettings({ sourceLanguage: "  Japanese  " }))
+    );
 
     expect(payload.sourceLanguage).toBe("Japanese");
   });

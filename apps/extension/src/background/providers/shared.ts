@@ -4,7 +4,10 @@ import type { ExtensionSettings, TextSegment, TranslationResult } from "../../sh
 export const TRANSLATION_SYSTEM_PROMPT =
   "You are a translation engine for a browser extension. Return only valid JSON. Preserve meaning, names, URLs, code-like tokens, and formatting where practical.";
 
-export function buildTranslationPayload(segments: TextSegment[], settings: ExtensionSettings): string {
+export function buildTranslationPayload(
+  segments: TextSegment[],
+  settings: ExtensionSettings
+): string {
   const source =
     settings.sourceLanguage.trim().toLowerCase() === "auto"
       ? "auto-detected source language"
@@ -63,7 +66,10 @@ export function parseTranslations(content: string, segments: TextSegment[]): Tra
 
 export function validateTranslations(value: unknown, segments: TextSegment[]): TranslationResult[] {
   const translations =
-    typeof value === "object" && value !== null && "translations" in value && Array.isArray(value.translations)
+    typeof value === "object" &&
+    value !== null &&
+    "translations" in value &&
+    Array.isArray(value.translations)
       ? value.translations
       : [];
   const validIds = new Set(segments.map((segment) => segment.id));

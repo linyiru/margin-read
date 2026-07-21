@@ -115,7 +115,10 @@ describe("initializeYouTubeControls", () => {
 
     expect(Array.from(captionItems ?? [], (item) => item.disabled)).toEqual([false, false]);
     expect(
-      Array.from(captionItems ?? [], (item) => item.querySelector(".margin-youtube__menu-detail")?.textContent)
+      Array.from(
+        captionItems ?? [],
+        (item) => item.querySelector(".margin-youtube__menu-detail")?.textContent
+      )
     ).toEqual([
       "No YouTube captions detected. AI subtitles will need speech-to-text support.",
       "No YouTube captions detected. AI subtitles will need speech-to-text support."
@@ -137,13 +140,17 @@ describe("initializeYouTubeControls", () => {
     vi.advanceTimersByTime(250);
 
     const host = document.querySelector<HTMLElement>("#margin-youtube-subtitle-control");
-    expect(host?.shadowRoot?.querySelector(".margin-youtube")?.getAttribute("data-has-captions")).toBe("false");
+    expect(
+      host?.shadowRoot?.querySelector(".margin-youtube")?.getAttribute("data-has-captions")
+    ).toBe("false");
   });
 
   it("shows why captions cannot be translated when no YouTube caption track exists", async () => {
     const host = await mountYouTubeControl();
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     expect(
@@ -200,7 +207,9 @@ describe("initializeYouTubeControls", () => {
       `
     );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -227,12 +236,16 @@ describe("initializeYouTubeControls", () => {
       return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
     });
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -249,15 +262,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("translates caption tracks in batches and renders by video time", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: `zh: ${segment.text}` }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: `zh: ${segment.text}`
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -277,7 +295,9 @@ describe("initializeYouTubeControls", () => {
     const host = await mountYouTubeControlWithTrack();
     setVideoTime(1.2);
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     const overlay = document
@@ -298,15 +318,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("prioritizes caption track translation from the current playback time", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: segment.text }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: segment.text
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -327,7 +352,9 @@ describe("initializeYouTubeControls", () => {
     const host = await mountYouTubeControlWithTrack();
     setVideoTime(4.2);
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     expect(sendMessage).toHaveBeenLastCalledWith({
@@ -341,15 +368,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("hides the track overlay when playback is outside active cues", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: segment.text }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: segment.text
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -366,7 +398,9 @@ describe("initializeYouTubeControls", () => {
     const host = await mountYouTubeControlWithTrack();
     setVideoTime(1.2);
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
     setVideoTime(3);
     vi.advanceTimersByTime(100);
@@ -378,15 +412,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("does not fall back to DOM caption requests after a caption track is active", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: segment.text }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: segment.text
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -403,13 +442,17 @@ describe("initializeYouTubeControls", () => {
     const host = await mountYouTubeControlWithTrack();
     setVideoTime(1.2);
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
     const callsAfterTrack = getTranslationCallCount();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">DOM caption</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">DOM caption</span></div>`
+      );
     await Promise.resolve();
     vi.advanceTimersByTime(20);
 
@@ -417,15 +460,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("renders the first caption track cue when no video element is mounted", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: `zh: ${segment.text}` }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: `zh: ${segment.text}`
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -441,7 +489,9 @@ describe("initializeYouTubeControls", () => {
     );
     const host = await mountYouTubeControlWithTrack({ withVideo: false });
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     expect(
@@ -495,12 +545,16 @@ describe("initializeYouTubeControls", () => {
       })
     );
     const host = await mountYouTubeControlWithTrack();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">DOM caption</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">DOM caption</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     expect(sendMessage).toHaveBeenLastCalledWith({
@@ -510,15 +564,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("uses a loaded YouTube timedtext resource when the direct caption track is empty", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: `zh: ${segment.text}` }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: `zh: ${segment.text}`
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi
@@ -548,10 +607,14 @@ describe("initializeYouTubeControls", () => {
     const host = await mountYouTubeControlWithTrack();
     setVideoTime(1.2);
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
-    expect(fetch).toHaveBeenLastCalledWith("https://www.youtube.com/api/timedtext?v=abc&fmt=json3&pot=token");
+    expect(fetch).toHaveBeenLastCalledWith(
+      "https://www.youtube.com/api/timedtext?v=abc&fmt=json3&pot=token"
+    );
     expect(
       document
         .querySelector<HTMLElement>("#margin-youtube-caption-overlay")
@@ -561,15 +624,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("primes YouTube timedtext while keeping native captions hidden", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: `zh: ${segment.text}` }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: `zh: ${segment.text}`
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi
@@ -585,20 +653,27 @@ describe("initializeYouTubeControls", () => {
           text: () =>
             Promise.resolve(
               JSON.stringify({
-                events: [{ tStartMs: 1000, dDurationMs: 1000, segs: [{ utf8: "Hidden native cue" }] }]
+                events: [
+                  { tStartMs: 1000, dDurationMs: 1000, segs: [{ utf8: "Hidden native cue" }] }
+                ]
               })
             )
         })
     );
     let timedTextEntries: PerformanceEntry[] = [];
-    const performanceSpy = vi.spyOn(performance, "getEntriesByType").mockImplementation(() => timedTextEntries);
+    const performanceSpy = vi
+      .spyOn(performance, "getEntriesByType")
+      .mockImplementation(() => timedTextEntries);
     const host = await mountYouTubeControlWithTrack();
     const subtitlesButton = document.querySelector<HTMLButtonElement>(".ytp-subtitles-button")!;
     let subtitlesButtonClicks = 0;
     subtitlesButton.setAttribute("aria-pressed", "false");
     subtitlesButton.addEventListener("click", () => {
       subtitlesButtonClicks += 1;
-      subtitlesButton.setAttribute("aria-pressed", subtitlesButtonClicks % 2 === 1 ? "true" : "false");
+      subtitlesButton.setAttribute(
+        "aria-pressed",
+        subtitlesButtonClicks % 2 === 1 ? "true" : "false"
+      );
       if (subtitlesButtonClicks === 1) {
         timedTextEntries = [
           {
@@ -617,7 +692,9 @@ describe("initializeYouTubeControls", () => {
     await flushPromises();
 
     expect(subtitlesButtonClicks).toBe(2);
-    expect(document.getElementById("margin-youtube-native-caption-style")).toBeInstanceOf(HTMLStyleElement);
+    expect(document.getElementById("margin-youtube-native-caption-style")).toBeInstanceOf(
+      HTMLStyleElement
+    );
     expect(
       document
         .querySelector<HTMLElement>("#margin-youtube-caption-overlay")
@@ -630,15 +707,20 @@ describe("initializeYouTubeControls", () => {
   });
 
   it("does not toggle YouTube captions when they are already enabled for priming", async () => {
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: segment.text }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: segment.text
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi
@@ -654,7 +736,9 @@ describe("initializeYouTubeControls", () => {
           text: () =>
             Promise.resolve(
               JSON.stringify({
-                events: [{ tStartMs: 1000, dDurationMs: 1000, segs: [{ utf8: "Already enabled cue" }] }]
+                events: [
+                  { tStartMs: 1000, dDurationMs: 1000, segs: [{ utf8: "Already enabled cue" }] }
+                ]
               })
             )
         })
@@ -677,7 +761,9 @@ describe("initializeYouTubeControls", () => {
     subtitlesButton.setAttribute("aria-pressed", "true");
     setVideoTime(1.2);
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     expect(clickSpy).not.toHaveBeenCalled();
@@ -711,7 +797,9 @@ describe("initializeYouTubeControls", () => {
     );
     const host = await mountYouTubeControlWithTrack();
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
     expect(
@@ -723,15 +811,20 @@ describe("initializeYouTubeControls", () => {
 
   it("translates long caption tracks in multiple batches", async () => {
     const callsBeforeTrack = getTranslationCallCount();
-    sendMessage.mockImplementation((message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
-      if (message.type === "TRANSLATE_BATCH") {
-        return Promise.resolve({
-          ok: true,
-          results: (message.segments ?? []).map((segment) => ({ id: segment.id, text: segment.text }))
-        });
+    sendMessage.mockImplementation(
+      (message: { type?: string; segments?: Array<{ id: string; text: string }> }) => {
+        if (message.type === "TRANSLATE_BATCH") {
+          return Promise.resolve({
+            ok: true,
+            results: (message.segments ?? []).map((segment) => ({
+              id: segment.id,
+              text: segment.text
+            }))
+          });
+        }
+        return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
       }
-      return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
-    });
+    );
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -751,15 +844,17 @@ describe("initializeYouTubeControls", () => {
     );
     const host = await mountYouTubeControlWithTrack();
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await flushPromises();
 
-    const captionCalls = sendMessage.mock.calls.filter(
-      ([message]) => (message as { type?: string } | undefined)?.type === "TRANSLATE_BATCH"
-    ).slice(callsBeforeTrack);
+    const captionCalls = sendMessage.mock.calls
+      .filter(([message]) => (message as { type?: string } | undefined)?.type === "TRANSLATE_BATCH")
+      .slice(callsBeforeTrack);
     expect(captionCalls).toHaveLength(2);
-    expect((captionCalls[0]?.[0] as { segments: unknown[] }).segments).toHaveLength(32);
-    expect((captionCalls[1]?.[0] as { segments: unknown[] }).segments).toHaveLength(1);
+    expect((captionCalls[0][0] as { segments: unknown[] }).segments).toHaveLength(32);
+    expect((captionCalls[1][0] as { segments: unknown[] }).segments).toHaveLength(1);
   });
 
   it("hides the caption overlay when captions disappear", async () => {
@@ -773,7 +868,9 @@ describe("initializeYouTubeControls", () => {
       `
     );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -789,10 +886,12 @@ describe("initializeYouTubeControls", () => {
 
   it("turns caption translation off when the active mode is selected again", async () => {
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
     const bilingualItem = host.shadowRoot?.querySelector<HTMLButtonElement>(
       '.margin-youtube__menu-item[data-action="bilingual"]'
     );
@@ -802,18 +901,26 @@ describe("initializeYouTubeControls", () => {
     bilingualItem?.click();
 
     expect(document.querySelector("#margin-youtube-caption-overlay")).toBeNull();
-    expect(host.shadowRoot?.querySelector(".margin-youtube")?.getAttribute("data-mode")).toBe("idle");
-    expect(host.shadowRoot?.querySelector(".margin-youtube__button")?.getAttribute("aria-pressed")).toBe("false");
+    expect(host.shadowRoot?.querySelector(".margin-youtube")?.getAttribute("data-mode")).toBe(
+      "idle"
+    );
+    expect(
+      host.shadowRoot?.querySelector(".margin-youtube__button")?.getAttribute("aria-pressed")
+    ).toBe("false");
   });
 
   it("marks translated caption overlay mode separately", async () => {
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="translated"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="translated"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -827,12 +934,16 @@ describe("initializeYouTubeControls", () => {
 
   it("does not translate the same caption text twice", async () => {
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
     const callsAfterFirstCaption = sendMessage.mock.calls.length;
@@ -847,12 +958,16 @@ describe("initializeYouTubeControls", () => {
 
   it("debounces rapid caption mutations before refreshing", async () => {
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
     const callsAfterFirstCaption = sendMessage.mock.calls.length;
@@ -876,12 +991,16 @@ describe("initializeYouTubeControls", () => {
       return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
     });
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -900,12 +1019,16 @@ describe("initializeYouTubeControls", () => {
       return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
     });
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -924,12 +1047,16 @@ describe("initializeYouTubeControls", () => {
       return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
     });
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -948,7 +1075,9 @@ describe("initializeYouTubeControls", () => {
       `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
     );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
     document
@@ -965,7 +1094,10 @@ describe("initializeYouTubeControls", () => {
     vi.advanceTimersByTime(20);
     await Promise.resolve();
 
-    expect(document.querySelector<HTMLElement>("#margin-youtube-caption-overlay")?.shadowRoot?.children.length).toBe(1);
+    expect(
+      document.querySelector<HTMLElement>("#margin-youtube-caption-overlay")?.shadowRoot?.children
+        .length
+    ).toBe(1);
   });
 
   it("ignores caption responses after the mode is turned off", async () => {
@@ -982,10 +1114,12 @@ describe("initializeYouTubeControls", () => {
     const bilingualItem = host.shadowRoot?.querySelector<HTMLButtonElement>(
       '.margin-youtube__menu-item[data-action="bilingual"]'
     );
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
     bilingualItem?.click();
     bilingualItem?.click();
@@ -1006,12 +1140,16 @@ describe("initializeYouTubeControls", () => {
       return Promise.resolve({ ok: true, settings: { targetLanguage: "Japanese" } });
     });
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     document.querySelector(".ytp-caption-window-container")?.remove();
     await Promise.resolve();
@@ -1033,7 +1171,9 @@ describe("initializeYouTubeControls", () => {
       `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
     );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
     const callsAfterFirstCaption = sendMessage.mock.calls.length;
@@ -1063,7 +1203,9 @@ describe("initializeYouTubeControls", () => {
       `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">caption 0</span></div>`
     );
 
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -1105,7 +1247,9 @@ describe("initializeYouTubeControls", () => {
     vi.advanceTimersByTime(250);
     document
       .querySelector<HTMLElement>("#margin-youtube-subtitle-control")
-      ?.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.shadowRoot?.querySelector<HTMLButtonElement>(
+        '.margin-youtube__menu-item[data-action="bilingual"]'
+      )
       ?.click();
 
     expect(document.querySelector("#margin-youtube-caption-overlay")).toBeNull();
@@ -1113,11 +1257,15 @@ describe("initializeYouTubeControls", () => {
 
   it("removes caption overlay when leaving the watch page", async () => {
     const host = await mountYouTubeControl();
-    document.querySelector(".html5-video-player")?.insertAdjacentHTML(
-      "beforeend",
-      `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
-    );
-    host.shadowRoot?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')?.click();
+    document
+      .querySelector(".html5-video-player")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        `<div class="ytp-caption-window-container"><span class="ytp-caption-segment">Hello world</span></div>`
+      );
+    host.shadowRoot
+      ?.querySelector<HTMLButtonElement>('.margin-youtube__menu-item[data-action="bilingual"]')
+      ?.click();
     await Promise.resolve();
 
     setPageUrl("https://www.youtube.com/feed/subscriptions");
@@ -1130,7 +1278,9 @@ describe("initializeYouTubeControls", () => {
 
   it("opens extension settings from the menu", async () => {
     const host = await mountYouTubeControl();
-    const settingsItem = host.shadowRoot?.querySelectorAll<HTMLButtonElement>(".margin-youtube__menu-item")[2];
+    const settingsItem = host.shadowRoot?.querySelectorAll<HTMLButtonElement>(
+      ".margin-youtube__menu-item"
+    )[2];
 
     settingsItem?.click();
 
@@ -1155,9 +1305,9 @@ describe("initializeYouTubeControls", () => {
     const host = await mountYouTubeControl();
     await Promise.resolve();
 
-    expect(host.shadowRoot?.querySelector(".margin-youtube__button")?.getAttribute("aria-label")).toBe(
-      "Margin captions into English"
-    );
+    expect(
+      host.shadowRoot?.querySelector(".margin-youtube__button")?.getAttribute("aria-label")
+    ).toBe("Margin captions into English");
   });
 
   it("rescans when YouTube changes player DOM", async () => {
@@ -1180,9 +1330,9 @@ describe("initializeYouTubeControls", () => {
     storageListener?.({ [SETTINGS_KEY]: { newValue: { targetLanguage: "French" } } }, "sync");
     storageListener?.({ [SETTINGS_KEY]: { newValue: { debugMode: true } } }, "local");
 
-    expect(host.shadowRoot?.querySelector(".margin-youtube__button")?.getAttribute("aria-label")).toBe(
-      "Margin captions into Japanese"
-    );
+    expect(
+      host.shadowRoot?.querySelector(".margin-youtube__button")?.getAttribute("aria-label")
+    ).toBe("Margin captions into Japanese");
   });
 
   it("debounces repeated YouTube navigation signals", () => {
@@ -1232,7 +1382,9 @@ async function mountYouTubeControl(): Promise<HTMLElement> {
   return document.querySelector<HTMLElement>("#margin-youtube-subtitle-control")!;
 }
 
-async function mountYouTubeControlWithTrack({ withVideo = true }: { withVideo?: boolean } = {}): Promise<HTMLElement> {
+async function mountYouTubeControlWithTrack({
+  withVideo = true
+}: { withVideo?: boolean } = {}): Promise<HTMLElement> {
   setPageUrl("https://www.youtube.com/watch?v=abc");
   document.body.innerHTML = `
     <script>
@@ -1275,11 +1427,14 @@ function setVideoTime(currentTime: number): void {
 }
 
 function getTranslationCallCount(): number {
-  return sendMessage.mock.calls.filter(([message]) => (message as { type?: string } | undefined)?.type === "TRANSLATE_BATCH")
-    .length;
+  return sendMessage.mock.calls.filter(
+    ([message]) => (message as { type?: string } | undefined)?.type === "TRANSLATE_BATCH"
+  ).length;
 }
 
 function setPageUrl(url: string): void {
-  const windowWithHappyDom = window as Window & { happyDOM?: { setURL: (nextUrl: string) => void } };
+  const windowWithHappyDom = window as Window & {
+    happyDOM?: { setURL: (nextUrl: string) => void };
+  };
   windowWithHappyDom.happyDOM?.setURL(url);
 }

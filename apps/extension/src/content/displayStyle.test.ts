@@ -21,12 +21,18 @@ afterEach(() => {
 
 describe("getTranslationClassName", () => {
   it("adds the base class and style modifier", () => {
-    expect(getTranslationClassName("balanced")).toBe("margin-translation margin-translation--balanced");
+    expect(getTranslationClassName("balanced")).toBe(
+      "margin-translation margin-translation--balanced"
+    );
   });
 
   it("maps legacy display styles to their modern equivalents", () => {
-    expect(getTranslationClassName("integrated")).toBe("margin-translation margin-translation--quiet");
-    expect(getTranslationClassName("highlighted")).toBe("margin-translation margin-translation--card");
+    expect(getTranslationClassName("integrated")).toBe(
+      "margin-translation margin-translation--quiet"
+    );
+    expect(getTranslationClassName("highlighted")).toBe(
+      "margin-translation margin-translation--card"
+    );
   });
 });
 

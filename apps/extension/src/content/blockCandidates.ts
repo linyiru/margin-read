@@ -1,4 +1,5 @@
 import { normalizeText } from "../shared/text";
+import { matchesSelector } from "./dom";
 import { isAccessibilityOnlyElement, isPageChromeElement } from "./readingVisibility";
 
 export type BlockCandidateSource = "semantic" | "archetype" | "adapter" | "legacy";
@@ -63,7 +64,10 @@ export interface BlockCandidate {
   skipReason?: BlockCandidateSkipReason;
 }
 
-export function createBlockCandidate(element: HTMLElement, source: BlockCandidateSource): BlockCandidate {
+export function createBlockCandidate(
+  element: HTMLElement,
+  source: BlockCandidateSource
+): BlockCandidate {
   const text = normalizeText(element.innerText ?? element.textContent ?? "");
   const role = inferBlockRole(element);
   const score = scoreBlockCandidate(element, text, role, source);
@@ -97,7 +101,7 @@ export function inferBlockRole(element: HTMLElement): BlockCandidateRole {
     return "definition";
   }
 
-  if (element.matches("figcaption")) {
+  if (matchesSelector(element, "figcaption")) {
     return "caption";
   }
 
@@ -235,4 +239,3 @@ function hasHighLinkDensity(element: HTMLElement, text: string): boolean {
   );
   return linkTextLength / text.length > 0.55;
 }
-

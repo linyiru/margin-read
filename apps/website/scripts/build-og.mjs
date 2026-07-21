@@ -27,16 +27,28 @@ const root = path.resolve(__dirname, "..");
 const FONT_ROOT = path.join(root, "node_modules/@fontsource");
 const FONTS = {
   playfair: path.join(FONT_ROOT, "playfair-display/files/playfair-display-latin-400-normal.woff"),
-  playfairItalic: path.join(FONT_ROOT, "playfair-display/files/playfair-display-latin-400-italic.woff"),
+  playfairItalic: path.join(
+    FONT_ROOT,
+    "playfair-display/files/playfair-display-latin-400-italic.woff"
+  ),
   // chinese-traditional umbrella covers CJK ideographs (旁譯入頁原文如故…)
-  notoSerifTC: path.join(FONT_ROOT, "noto-serif-tc/files/noto-serif-tc-chinese-traditional-400-normal.woff"),
-  notoSerifTCBold: path.join(FONT_ROOT, "noto-serif-tc/files/noto-serif-tc-chinese-traditional-700-normal.woff"),
+  notoSerifTC: path.join(
+    FONT_ROOT,
+    "noto-serif-tc/files/noto-serif-tc-chinese-traditional-400-normal.woff"
+  ),
+  notoSerifTCBold: path.join(
+    FONT_ROOT,
+    "noto-serif-tc/files/noto-serif-tc-chinese-traditional-700-normal.woff"
+  ),
   // Subset 123 contains fullwidth punctuation U+FF0C 「，」 which the
   // chinese-traditional umbrella doesn't carry. Satori falls through
   // multiple font entries with the same family name to find glyphs.
   notoSerifTCPunct: path.join(FONT_ROOT, "noto-serif-tc/files/noto-serif-tc-123-400-normal.woff"),
-  notoSerifTCPunctBold: path.join(FONT_ROOT, "noto-serif-tc/files/noto-serif-tc-123-700-normal.woff"),
-  jetBrainsMono: path.join(FONT_ROOT, "jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff"),
+  notoSerifTCPunctBold: path.join(
+    FONT_ROOT,
+    "noto-serif-tc/files/noto-serif-tc-123-700-normal.woff"
+  ),
+  jetBrainsMono: path.join(FONT_ROOT, "jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff")
 };
 
 const OG_STRINGS = {
@@ -48,7 +60,7 @@ const OG_STRINGS = {
   zhEm: "原文如故",
   zhTail: "。",
   axisStrip: "NO SERVER · NO ACCOUNT · NO SUBSCRIPTION · MIT",
-  url: "marginread.com",
+  url: "marginread.com"
 };
 
 const COLORS = {
@@ -57,7 +69,7 @@ const COLORS = {
   inkSoft: "#3a3a3a",
   mute: "#8e8a82",
   jam: "#b8331f",
-  line: "rgba(26,26,26,0.12)",
+  line: "rgba(26,26,26,0.12)"
 };
 
 function loadFont(filePath) {
@@ -71,7 +83,8 @@ function markDataUrl() {
 
 function template(strings, markSrc) {
   return html`
-    <div style="
+    <div
+      style="
       width: 1200px;
       height: 630px;
       background: ${COLORS.paper};
@@ -79,18 +92,30 @@ function template(strings, markSrc) {
       flex-direction: column;
       padding: 60px 80px 56px;
       font-family: 'Playfair Display';
-    ">
+    "
+    >
       <!-- Top: M.12 mark + Margin wordmark -->
       <div style="display: flex; align-items: center; gap: 26px; margin-bottom: 92px;">
         <img src="${markSrc}" style="display: block; width: 80px; height: 80px;" />
-        <span style="font-family: 'Playfair Display'; font-size: 46px; color: ${COLORS.ink}; line-height: 1;">${strings.wordmark}</span>
+        <span
+          style="font-family: 'Playfair Display'; font-size: 46px; color: ${COLORS.ink}; line-height: 1;"
+          >${strings.wordmark}</span
+        >
       </div>
 
       <!-- EN headline -->
       <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px;">
-        <div style="display: flex; font-family: 'Playfair Display'; font-size: 58px; color: ${COLORS.ink}; letter-spacing: -0.5px; line-height: 1.05;">${strings.enLine1}</div>
-        <div style="display: flex; font-family: 'Playfair Display'; font-size: 58px; color: ${COLORS.ink}; letter-spacing: -0.5px; line-height: 1.05;">
-          <span style="font-style: italic; color: ${COLORS.jam}; margin-right: 18px;">${strings.enEm} </span>
+        <div
+          style="display: flex; font-family: 'Playfair Display'; font-size: 58px; color: ${COLORS.ink}; letter-spacing: -0.5px; line-height: 1.05;"
+        >
+          ${strings.enLine1}
+        </div>
+        <div
+          style="display: flex; font-family: 'Playfair Display'; font-size: 58px; color: ${COLORS.ink}; letter-spacing: -0.5px; line-height: 1.05;"
+        >
+          <span style="font-style: italic; color: ${COLORS.jam}; margin-right: 18px;"
+            >${strings.enEm} </span
+          >
           <span>${strings.enTail.trimStart()}</span>
         </div>
       </div>
@@ -99,7 +124,9 @@ function template(strings, markSrc) {
            (separate family name because the chinese-traditional subset
            doesn't include U+FF0C 「，」 — satori falls through on
            font-family chain, not on duplicate-name fonts). -->
-      <div style="display: flex; font-family: 'Noto Serif TC', 'Noto Serif TC Punct'; font-size: 42px; color: ${COLORS.inkSoft}; line-height: 1.2;">
+      <div
+        style="display: flex; font-family: 'Noto Serif TC', 'Noto Serif TC Punct'; font-size: 42px; color: ${COLORS.inkSoft}; line-height: 1.2;"
+      >
         <span>${strings.zhLine1}</span>
         <span style="font-weight: 700; color: ${COLORS.jam};">${strings.zhEm}</span>
         <span>${strings.zhTail}</span>
@@ -107,9 +134,17 @@ function template(strings, markSrc) {
 
       <!-- Bottom-aligned strip -->
       <div style="display: flex; flex: 1;"></div>
-      <div style="display: flex; border-top: 1px solid ${COLORS.line}; padding-top: 24px; justify-content: space-between; align-items: center;">
-        <span style="font-family: 'JetBrains Mono'; font-size: 14px; color: ${COLORS.jam}; letter-spacing: 2.6px;">${strings.axisStrip}</span>
-        <span style="font-family: 'JetBrains Mono'; font-size: 14px; color: ${COLORS.ink}; letter-spacing: 2px;">${strings.url}</span>
+      <div
+        style="display: flex; border-top: 1px solid ${COLORS.line}; padding-top: 24px; justify-content: space-between; align-items: center;"
+      >
+        <span
+          style="font-family: 'JetBrains Mono'; font-size: 14px; color: ${COLORS.jam}; letter-spacing: 2.6px;"
+          >${strings.axisStrip}</span
+        >
+        <span
+          style="font-family: 'JetBrains Mono'; font-size: 14px; color: ${COLORS.ink}; letter-spacing: 2px;"
+          >${strings.url}</span
+        >
       </div>
     </div>
   `;
@@ -123,17 +158,37 @@ async function renderCard() {
     height: 630,
     fonts: [
       { name: "Playfair Display", data: loadFont(FONTS.playfair), weight: 400, style: "normal" },
-      { name: "Playfair Display", data: loadFont(FONTS.playfairItalic), weight: 400, style: "italic" },
+      {
+        name: "Playfair Display",
+        data: loadFont(FONTS.playfairItalic),
+        weight: 400,
+        style: "italic"
+      },
       { name: "Noto Serif TC", data: loadFont(FONTS.notoSerifTC), weight: 400, style: "normal" },
-      { name: "Noto Serif TC", data: loadFont(FONTS.notoSerifTCBold), weight: 700, style: "normal" },
-      { name: "Noto Serif TC Punct", data: loadFont(FONTS.notoSerifTCPunct), weight: 400, style: "normal" },
-      { name: "Noto Serif TC Punct", data: loadFont(FONTS.notoSerifTCPunctBold), weight: 700, style: "normal" },
-      { name: "JetBrains Mono", data: loadFont(FONTS.jetBrainsMono), weight: 400, style: "normal" },
-    ],
+      {
+        name: "Noto Serif TC",
+        data: loadFont(FONTS.notoSerifTCBold),
+        weight: 700,
+        style: "normal"
+      },
+      {
+        name: "Noto Serif TC Punct",
+        data: loadFont(FONTS.notoSerifTCPunct),
+        weight: 400,
+        style: "normal"
+      },
+      {
+        name: "Noto Serif TC Punct",
+        data: loadFont(FONTS.notoSerifTCPunctBold),
+        weight: 700,
+        style: "normal"
+      },
+      { name: "JetBrains Mono", data: loadFont(FONTS.jetBrainsMono), weight: 400, style: "normal" }
+    ]
   });
 
   const resvg = new Resvg(svg, {
-    fitTo: { mode: "width", value: 1200 },
+    fitTo: { mode: "width", value: 1200 }
   });
   return resvg.render().asPng();
 }

@@ -25,13 +25,21 @@ chrome.runtime.onMessage.addListener((message: RuntimeMessage, _sender, sendResp
   if (message.type === "TOGGLE_TRANSLATION") {
     const next = typeof message.enabled === "boolean" ? message.enabled : !orchestrator.isEnabled();
     void orchestrator.setEnabled(next).finally(() => {
-      sendResponse({ ok: true, enabled: orchestrator.isEnabled(), debug: orchestrator.getDebugState() });
+      sendResponse({
+        ok: true,
+        enabled: orchestrator.isEnabled(),
+        debug: orchestrator.getDebugState()
+      });
     });
     return true;
   }
 
   if (message.type === "GET_PAGE_STATE") {
-    sendResponse({ ok: true, enabled: orchestrator.isEnabled(), debug: orchestrator.getDebugState() });
+    sendResponse({
+      ok: true,
+      enabled: orchestrator.isEnabled(),
+      debug: orchestrator.getDebugState()
+    });
     return;
   }
 });
@@ -52,7 +60,9 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 
 async function initializeFloatingButton(): Promise<void> {
   if (!document.body) {
-    window.addEventListener("DOMContentLoaded", () => void initializeFloatingButton(), { once: true });
+    window.addEventListener("DOMContentLoaded", () => void initializeFloatingButton(), {
+      once: true
+    });
     return;
   }
 

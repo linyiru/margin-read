@@ -30,7 +30,9 @@ afterEach(() => {
 
 describe("collectTextBlocks", () => {
   it("uses semantic blocks when available", () => {
-    const document = createDocument("<main><p>This is a normal semantic paragraph with enough text.</p></main>");
+    const document = createDocument(
+      "<main><p>This is a normal semantic paragraph with enough text.</p></main>"
+    );
 
     const blocks = collectTextBlocks(document, options);
 
@@ -148,7 +150,9 @@ describe("collectTextBlocks", () => {
     const blocks = collectTextBlocks(document, options);
 
     expect(blocks).toHaveLength(3);
-    expect(blocks.every((block) => block.textContent && block.textContent.length < 4000)).toBe(true);
+    expect(blocks.every((block) => block.textContent && block.textContent.length < 4000)).toBe(
+      true
+    );
   });
 
   it("keeps single line breaks inside a br-separated translation block", () => {
@@ -268,7 +272,9 @@ describe("collectTextBlocks", () => {
       visibility: "visible",
       opacity: "1"
     };
-    const document = createDocument("<main><p>This paragraph has enough text but is hidden.</p></main>");
+    const document = createDocument(
+      "<main><p>This paragraph has enough text but is hidden.</p></main>"
+    );
 
     expect(collectTextBlocks(document, options)).toHaveLength(0);
   });
@@ -314,7 +320,9 @@ describe("collectTextBlocks", () => {
     const blocks = collectTextBlocks(document, options);
 
     expect(blocks).toHaveLength(1);
-    expect(normalize(blocks[0]?.textContent ?? "")).toBe("Visible legacy paragraph has enough text to become its own block.");
+    expect(normalize(blocks[0]?.textContent ?? "")).toBe(
+      "Visible legacy paragraph has enough text to become its own block."
+    );
   });
 
   it("keeps short CJK dialogue ending in a sentence terminator", () => {
@@ -359,9 +367,7 @@ describe("collectTextBlocks", () => {
   it("does not count furigana readings toward CJK length", () => {
     // Base content "竜が来た" is 4 chars (below the CJK minimum and unterminated); the
     // <rt> reading must not inflate it past the threshold.
-    const document = createDocument(
-      "<main><p><ruby>竜<rt>りゅう</rt></ruby>が来た</p></main>"
-    );
+    const document = createDocument("<main><p><ruby>竜<rt>りゅう</rt></ruby>が来た</p></main>");
 
     expect(collectTextBlocks(document, options)).toHaveLength(0);
   });
@@ -405,7 +411,9 @@ describe("collectTextBlocks", () => {
     const blocks = collectTextBlocks(document, options);
 
     expect(blocks.some((block) => block.tagName === "BLOCKQUOTE")).toBe(true);
-    expect(blocks.some((block) => normalize(block.textContent ?? "").includes("My own commentary"))).toBe(true);
+    expect(
+      blocks.some((block) => normalize(block.textContent ?? "").includes("My own commentary"))
+    ).toBe(true);
   });
 });
 

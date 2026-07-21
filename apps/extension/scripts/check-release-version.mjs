@@ -12,7 +12,10 @@ const failures = [];
 // The manifest version is injected at build from package.json, so only the
 // package.json files are checked against the release tag here.
 assert(rootPackage.version === expectedVersion, `root package version must be ${expectedVersion}.`);
-assert(extensionPackage.version === expectedVersion, `extension package version must be ${expectedVersion}.`);
+assert(
+  extensionPackage.version === expectedVersion,
+  `extension package version must be ${expectedVersion}.`
+);
 
 if (failures.length > 0) {
   console.error("Release version check failed:");

@@ -104,7 +104,7 @@ function parseV1(stored: unknown): ExtensionSettingsCurrent {
     siteAdapters: {
       x: {
         ...defaults.siteAdapters.x,
-        ...(source.siteAdapters?.x ?? {})
+        ...source.siteAdapters?.x
       }
     },
     version: SETTINGS_VERSION

@@ -3,14 +3,21 @@ import { collectArticleBlocks } from "./archetypes/article";
 import { collectDocsBlocks } from "./archetypes/docs";
 import { collectInlineRunBlocks } from "./inlineText";
 import { collectLegacyBlocks } from "./legacy";
-import { createIncludedBlockCandidates, getNormalizedText, removeCoveredAncestorCandidates } from "./shared";
+import {
+  createIncludedBlockCandidates,
+  getNormalizedText,
+  removeCoveredAncestorCandidates
+} from "./shared";
 import type { TextBlockOptions } from "./types";
 import { collectUniversalBlocks } from "./universal";
 
 const MIN_SEMANTIC_BLOCKS = 3;
 const MIN_SEMANTIC_TEXT_LENGTH = 500;
 
-export function collectBlockCandidates(document: Document, options: TextBlockOptions): BlockCandidate[] {
+export function collectBlockCandidates(
+  document: Document,
+  options: TextBlockOptions
+): BlockCandidate[] {
   const docsBlocks = collectDocsBlocks(document, options);
   const articleBlocks = collectArticleBlocks(document, options);
   const universalBlocks = uniqueElements([
@@ -52,7 +59,9 @@ function createSemanticBlockCandidates(
   options: TextBlockOptions
 ): BlockCandidate[] {
   const archetypeBlockSet = new Set(archetypeBlocks);
-  const remainingUniversalBlocks = universalBlocks.filter((element) => !archetypeBlockSet.has(element));
+  const remainingUniversalBlocks = universalBlocks.filter(
+    (element) => !archetypeBlockSet.has(element)
+  );
 
   return removeCoveredAncestorCandidates(
     [

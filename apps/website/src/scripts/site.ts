@@ -6,9 +6,7 @@
 // Demo: translate-on-click + auto on scroll
 // =========================================
 const demoStage = document.getElementById("demoStage");
-const translateBtn = document.getElementById(
-  "translateBtn",
-) as HTMLButtonElement | null;
+const translateBtn = document.getElementById("translateBtn") as HTMLButtonElement | null;
 const modeBtn = document.getElementById("modeBtn") as HTMLButtonElement | null;
 
 // Pre-rendered labels live on the demo stage (data-label-* attributes)
@@ -17,7 +15,7 @@ const labels = {
   integrated: demoStage?.dataset.labelIntegrated ?? "Integrated",
   highlight: demoStage?.dataset.labelHighlight ?? "Highlighted",
   translate: demoStage?.dataset.labelTranslate ?? "Translate this page",
-  translated: demoStage?.dataset.labelTranslated ?? "Translated ✓",
+  translated: demoStage?.dataset.labelTranslated ?? "Translated ✓"
 };
 
 let translated = false;
@@ -77,7 +75,7 @@ if (demoStage && "IntersectionObserver" in window) {
         }
       });
     },
-    { threshold: 0.45 },
+    { threshold: 0.45 }
   );
   io.observe(demoStage);
 }

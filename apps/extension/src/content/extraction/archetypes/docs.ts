@@ -1,11 +1,36 @@
 import type { TextBlockOptions } from "../types";
 import { isTranslatableElement, shouldIncludeCandidate } from "../shared";
 
-const DATA_AS_DOCS_BLOCK_SELECTORS = ["[data-as='p']", "[data-as='h1']", "[data-as='h2']", "[data-as='h3']"];
-const MARKDOWN_DOCS_CONTAINER_SELECTORS = ["main .prose", "main .markdown-body", "main .theme-doc-markdown"];
-const MARKDOWN_DOCS_BLOCK_SELECTORS = ["p", "li", "dt", "dd", "figcaption", "blockquote", "h1", "h2", "h3", "td", "th"];
+const DATA_AS_DOCS_BLOCK_SELECTORS = [
+  "[data-as='p']",
+  "[data-as='h1']",
+  "[data-as='h2']",
+  "[data-as='h3']"
+];
+const MARKDOWN_DOCS_CONTAINER_SELECTORS = [
+  "main .prose",
+  "main .markdown-body",
+  "main .theme-doc-markdown"
+];
+const MARKDOWN_DOCS_BLOCK_SELECTORS = [
+  "p",
+  "li",
+  "dt",
+  "dd",
+  "figcaption",
+  "blockquote",
+  "h1",
+  "h2",
+  "h3",
+  "td",
+  "th"
+];
 const DOCS_ARCHETYPE_SELECTOR = [
-  ...DATA_AS_DOCS_BLOCK_SELECTORS.flatMap((selector) => [`article ${selector}`, `main ${selector}`, selector]),
+  ...DATA_AS_DOCS_BLOCK_SELECTORS.flatMap((selector) => [
+    `article ${selector}`,
+    `main ${selector}`,
+    selector
+  ]),
   ...MARKDOWN_DOCS_CONTAINER_SELECTORS.flatMap((containerSelector) =>
     MARKDOWN_DOCS_BLOCK_SELECTORS.map((blockSelector) => `${containerSelector} ${blockSelector}`)
   )
@@ -14,17 +39,24 @@ export const DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD = 0.7;
 
 export function collectDocsBlocks(document: Document, options: TextBlockOptions): HTMLElement[] {
   const candidates = document.querySelectorAll<HTMLElement>(DOCS_ARCHETYPE_SELECTOR);
-  if (computeDocsArchetypeConfidence(document, candidates.length) < DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD) {
+  if (
+    computeDocsArchetypeConfidence(document, candidates.length) <
+    DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD
+  ) {
     return [];
   }
 
   return Array.from(candidates).filter(
-    (element) => isTranslatableElement(element, options) && shouldIncludeCandidate(element, "archetype")
+    (element) =>
+      isTranslatableElement(element, options) && shouldIncludeCandidate(element, "archetype")
   );
 }
 
 export function detectDocsArchetypeConfidence(document: Document): number {
-  return computeDocsArchetypeConfidence(document, document.querySelectorAll(DOCS_ARCHETYPE_SELECTOR).length);
+  return computeDocsArchetypeConfidence(
+    document,
+    document.querySelectorAll(DOCS_ARCHETYPE_SELECTOR).length
+  );
 }
 
 function computeDocsArchetypeConfidence(document: Document, archetypeBlockCount: number): number {

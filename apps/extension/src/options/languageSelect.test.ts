@@ -37,9 +37,7 @@ describe("language select", () => {
     input.dispatchEvent(new InputEvent("input"));
 
     const optionText = Array.from(listbox.children, (element) => element.textContent ?? "");
-    expect(optionText).toEqual(
-      expect.arrayContaining([expect.stringContaining("Japanese")])
-    );
+    expect(optionText).toEqual(expect.arrayContaining([expect.stringContaining("Japanese")]));
     expect(optionText).not.toEqual(
       expect.arrayContaining([expect.stringContaining("Traditional Chinese")])
     );

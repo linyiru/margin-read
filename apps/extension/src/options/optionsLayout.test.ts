@@ -20,15 +20,17 @@ describe("options layout", () => {
     const endpointInput = document.querySelector<HTMLInputElement>('[name="providerEndpoint"]');
 
     expect(endpointInput).not.toBeNull();
-    expect(endpointInput?.closest("[data-provider-section]")?.getAttribute("data-provider-section")).toBe(
-      "openai-compatible anthropic-compatible"
-    );
+    expect(
+      endpointInput?.closest("[data-provider-section]")?.getAttribute("data-provider-section")
+    ).toBe("openai-compatible anthropic-compatible");
   });
 
   it("marks the provider and API key fields for row alignment", () => {
     const document = createDocument(optionsHtml);
 
-    expect(document.querySelector('[data-field="provider"] select[name="provider"]')).not.toBeNull();
+    expect(
+      document.querySelector('[data-field="provider"] select[name="provider"]')
+    ).not.toBeNull();
     expect(document.querySelector('[data-field="api-key"] input[name="apiKey"]')).not.toBeNull();
   });
 
@@ -37,7 +39,9 @@ describe("options layout", () => {
 
     expect(document.querySelector("#source-language-mode")).not.toBeNull();
     expect(document.querySelector("#source-language-specific")?.hasAttribute("hidden")).toBe(true);
-    expect(document.querySelector<HTMLInputElement>('[name="sourceLanguage"]')?.type).toBe("hidden");
+    expect(document.querySelector<HTMLInputElement>('[name="sourceLanguage"]')?.type).toBe(
+      "hidden"
+    );
   });
 
   it("explains YouTube caption requirements before display settings", () => {
@@ -48,13 +52,17 @@ describe("options layout", () => {
     expect(youtubeHeading).not.toBeNull();
     expect(displayHeading).not.toBeNull();
     expect(document.querySelector('[data-i18n="youtubeSpeechToTextHint"]')).not.toBeNull();
-    expect(youtubeHeading!.compareDocumentPosition(displayHeading!) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+    expect(
+      youtubeHeading!.compareDocumentPosition(displayHeading!) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).not.toBe(0);
   });
 
   it("keeps display style and translation marker controls next to a shared preview", () => {
     const document = createDocument(optionsHtml);
     const displaySelect = document.querySelector<HTMLSelectElement>('select[name="displayStyle"]');
-    const markerInput = document.querySelector<HTMLInputElement>('input[name="showTranslationLabel"]');
+    const markerInput = document.querySelector<HTMLInputElement>(
+      'input[name="showTranslationLabel"]'
+    );
     const preview = document.querySelector("#display-style-preview");
 
     expect(displaySelect).not.toBeNull();
@@ -62,7 +70,9 @@ describe("options layout", () => {
     expect(preview).not.toBeNull();
     expect(preview?.querySelector("#display-style-preview-marker")).not.toBeNull();
     expect(preview?.closest(".settings-section")).toBe(displaySelect?.closest(".settings-section"));
-    expect(markerInput?.closest(".settings-section")).toBe(displaySelect?.closest(".settings-section"));
+    expect(markerInput?.closest(".settings-section")).toBe(
+      displaySelect?.closest(".settings-section")
+    );
   });
 
   it("explains cache behavior near the cache mode selector", () => {

@@ -1,6 +1,14 @@
-import type { ChatCompletion, ChatCompletionCreateParamsNonStreaming } from "openai/resources/chat/completions";
+import type {
+  ChatCompletion,
+  ChatCompletionCreateParamsNonStreaming
+} from "openai/resources/chat/completions";
 import type { Model } from "openai/resources/models";
-import type { ExtensionSettings, ProviderModel, TextSegment, TranslationResult } from "../../shared/types";
+import type {
+  ExtensionSettings,
+  ProviderModel,
+  TextSegment,
+  TranslationResult
+} from "../../shared/types";
 import {
   assertProviderResponse,
   buildTranslationPayload,
@@ -81,9 +89,9 @@ function buildOpenAIHeaders(settings: ExtensionSettings): Record<string, string>
   };
 }
 
-function buildResponseFormat(
-  settings: ExtensionSettings
-): { response_format?: OpenAIRequestBody["response_format"] } {
+function buildResponseFormat(settings: ExtensionSettings): {
+  response_format?: OpenAIRequestBody["response_format"];
+} {
   if (settings.provider === "openai") {
     return {
       response_format: {

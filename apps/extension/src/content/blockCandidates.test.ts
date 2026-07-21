@@ -45,7 +45,9 @@ describe("createBlockCandidate", () => {
   });
 
   it("classifies definition list entries as documentation content", () => {
-    const document = createDocument("<main><dl><dt>Hooks</dt><dd>Commands that run at selected lifecycle events.</dd></dl></main>");
+    const document = createDocument(
+      "<main><dl><dt>Hooks</dt><dd>Commands that run at selected lifecycle events.</dd></dl></main>"
+    );
     const term = document.querySelector("dt");
     const description = document.querySelector("dd");
 
@@ -56,14 +58,18 @@ describe("createBlockCandidate", () => {
   });
 
   it("keeps definition terms inline while descriptions remain integrated", () => {
-    const document = createDocument("<main><dl><dt>Hooks</dt><dd>Commands that run at selected lifecycle events.</dd></dl></main>");
+    const document = createDocument(
+      "<main><dl><dt>Hooks</dt><dd>Commands that run at selected lifecycle events.</dd></dl></main>"
+    );
     const term = document.querySelector("dt");
     const description = document.querySelector("dd");
 
     expect(term).not.toBeNull();
     expect(description).not.toBeNull();
     expect(createBlockCandidate(term as HTMLElement, "semantic").renderStrategy).toBe("inline");
-    expect(createBlockCandidate(description as HTMLElement, "semantic").renderStrategy).toBe("integrated");
+    expect(createBlockCandidate(description as HTMLElement, "semantic").renderStrategy).toBe(
+      "integrated"
+    );
   });
 
   it("treats figcaption as an explicit low-value caption role", () => {

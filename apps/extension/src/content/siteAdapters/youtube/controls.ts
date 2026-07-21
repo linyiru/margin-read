@@ -205,7 +205,9 @@ function stopCaptionTranslation(): void {
   captionHost = undefined;
 }
 
-async function fetchCaptionCuesWithYouTubeFallback(track: Parameters<typeof fetchYouTubeCaptionCues>[0]): Promise<YouTubeCaptionCue[]> {
+async function fetchCaptionCuesWithYouTubeFallback(
+  track: Parameters<typeof fetchYouTubeCaptionCues>[0]
+): Promise<YouTubeCaptionCue[]> {
   const directCues = await fetchYouTubeCaptionCues(track);
   if (directCues.length > 0) {
     return directCues;
@@ -225,7 +227,11 @@ async function primeYouTubeTimedTextUrl(): Promise<string | undefined> {
   }
 
   const subtitlesButton = document.querySelector<HTMLButtonElement>(".ytp-subtitles-button");
-  if (!subtitlesButton || subtitlesButton.hasAttribute("disabled") || subtitlesButton.getAttribute("aria-disabled") === "true") {
+  if (
+    !subtitlesButton ||
+    subtitlesButton.hasAttribute("disabled") ||
+    subtitlesButton.getAttribute("aria-disabled") === "true"
+  ) {
     return undefined;
   }
 
@@ -245,7 +251,12 @@ async function primeYouTubeTimedTextUrl(): Promise<string | undefined> {
 function getLatestLoadedTimedTextUrl(): string | undefined {
   return performance
     .getEntriesByType("resource")
-    .filter((entry) => entry.name.includes("/api/timedtext") && "decodedBodySize" in entry && Number(entry.decodedBodySize) > 0)
+    .filter(
+      (entry) =>
+        entry.name.includes("/api/timedtext") &&
+        "decodedBodySize" in entry &&
+        Number(entry.decodedBodySize) > 0
+    )
     .at(-1)?.name;
 }
 
@@ -323,16 +334,19 @@ async function translateCaptionTrack(cues: YouTubeCaptionCue[], requestId: numbe
       return;
     }
 
-    const batch = orderedCues.slice(index, index + CAPTION_TRACK_BATCH_SIZE).filter((cue) => !translatedTrackCues.has(cue.id));
+    const batch = orderedCues
+      .slice(index, index + CAPTION_TRACK_BATCH_SIZE)
+      .filter((cue) => !translatedTrackCues.has(cue.id));
     if (batch.length === 0) {
       continue;
     }
 
     try {
-      const response: { ok?: boolean; results?: Array<{ id: string; text: string }> } = await chrome.runtime.sendMessage({
-        type: "TRANSLATE_BATCH",
-        segments: batch.map((cue) => ({ id: cue.id, text: cue.text }))
-      });
+      const response: { ok?: boolean; results?: Array<{ id: string; text: string }> } =
+        await chrome.runtime.sendMessage({
+          type: "TRANSLATE_BATCH",
+          segments: batch.map((cue) => ({ id: cue.id, text: cue.text }))
+        });
       if (isCaptionTranslationIdle() || requestId !== activeTrackRequest || !response.ok) {
         return;
       }
@@ -360,7 +374,10 @@ function startCaptionPlayback(): void {
     window.clearInterval(captionPlaybackTimer);
   }
   renderTrackCaptionAtCurrentTime();
-  captionPlaybackTimer = window.setInterval(renderTrackCaptionAtCurrentTime, CAPTION_PLAYBACK_POLL_MS);
+  captionPlaybackTimer = window.setInterval(
+    renderTrackCaptionAtCurrentTime,
+    CAPTION_PLAYBACK_POLL_MS
+  );
 }
 
 function ensureCaptionOverlay(): void {
@@ -409,7 +426,8 @@ function scheduleCaptionRefresh(): void {
 
 function findRightControls(): HTMLElement | undefined {
   const controls =
-    document.querySelector(".html5-video-player .ytp-right-controls") ?? document.querySelector(".ytp-right-controls");
+    document.querySelector(".html5-video-player .ytp-right-controls") ??
+    document.querySelector(".ytp-right-controls");
   return controls instanceof HTMLElement ? controls : undefined;
 }
 
@@ -446,20 +464,28 @@ function createControl(): HTMLElement {
   menu.className = "margin-youtube__menu";
   menu.setAttribute("role", "menu");
 
-  const bilingualItem = createMenuItem("Bilingual captions", "Show original captions with Margin translation.", () => {
-    startCaptionTranslation("bilingual");
-    root.dataset.mode = captionMode;
-    root.dataset.open = "false";
-    updateControlState();
-  });
+  const bilingualItem = createMenuItem(
+    "Bilingual captions",
+    "Show original captions with Margin translation.",
+    () => {
+      startCaptionTranslation("bilingual");
+      root.dataset.mode = captionMode;
+      root.dataset.open = "false";
+      updateControlState();
+    }
+  );
   bilingualItem.dataset.action = "bilingual";
 
-  const translateItem = createMenuItem("Translated captions", "Show only translated captions.", () => {
-    startCaptionTranslation("translated");
-    root.dataset.mode = captionMode;
-    root.dataset.open = "false";
-    updateControlState();
-  });
+  const translateItem = createMenuItem(
+    "Translated captions",
+    "Show only translated captions.",
+    () => {
+      startCaptionTranslation("translated");
+      root.dataset.mode = captionMode;
+      root.dataset.open = "false";
+      updateControlState();
+    }
+  );
   translateItem.dataset.action = "translated";
 
   const settingsItem = createMenuItem("Settings", "Open Margin settings.", () => {
@@ -472,7 +498,11 @@ function createControl(): HTMLElement {
   return root;
 }
 
-function createMenuItem(label: string, description: string, onClick: () => void): HTMLButtonElement {
+function createMenuItem(
+  label: string,
+  description: string,
+  onClick: () => void
+): HTMLButtonElement {
   const item = document.createElement("button");
   item.type = "button";
   item.className = "margin-youtube__menu-item";
@@ -572,8 +602,13 @@ function renderTrackCaptionAtCurrentTime(): void {
   renderCaptionOverlay(translatedText ?? "");
 }
 
-function findActiveCue(cues: YouTubeCaptionCue[], currentTimeMs: number): YouTubeCaptionCue | undefined {
-  return cues.find((cue) => currentTimeMs >= cue.startMs && currentTimeMs < cue.startMs + cue.durationMs);
+function findActiveCue(
+  cues: YouTubeCaptionCue[],
+  currentTimeMs: number
+): YouTubeCaptionCue | undefined {
+  return cues.find(
+    (cue) => currentTimeMs >= cue.startMs && currentTimeMs < cue.startMs + cue.durationMs
+  );
 }
 
 function getCurrentVideoTimeMs(): number {
@@ -591,8 +626,11 @@ async function translateCaption(text: string): Promise<void> {
   renderCaptionOverlay("");
 
   try {
-    const response: { ok?: boolean; results?: Array<{ id: string; text: string }>; error?: string } =
-      await chrome.runtime.sendMessage({
+    const response: {
+      ok?: boolean;
+      results?: Array<{ id: string; text: string }>;
+      error?: string;
+    } = await chrome.runtime.sendMessage({
       type: "TRANSLATE_BATCH",
       segments: [{ id: "youtube-caption", text }]
     });
@@ -601,7 +639,9 @@ async function translateCaption(text: string): Promise<void> {
       return;
     }
 
-    const translatedText = response.results?.find((result) => result.id === "youtube-caption")?.text;
+    const translatedText = response.results?.find(
+      (result) => result.id === "youtube-caption"
+    )?.text;
     if (response.ok && translatedText) {
       setCachedCaptionTranslation(text, translatedText);
       renderCaptionOverlay(translatedText);
@@ -632,7 +672,10 @@ function getCaptionCacheKey(text: string): string {
 }
 
 function readVisibleCaptionText(): string {
-  return Array.from(document.querySelectorAll(CAPTION_SEGMENT_SELECTOR), (segment) => segment.textContent?.trim() ?? "")
+  return Array.from(
+    document.querySelectorAll(CAPTION_SEGMENT_SELECTOR),
+    (segment) => segment.textContent?.trim() ?? ""
+  )
     .filter(Boolean)
     .join(" ")
     .replace(/\s+/g, " ")
@@ -657,7 +700,10 @@ function hasYouTubeCaptionControls(): boolean {
   if (!(subtitlesButton instanceof HTMLElement)) {
     return false;
   }
-  return !subtitlesButton.hasAttribute("disabled") && subtitlesButton.getAttribute("aria-disabled") !== "true";
+  return (
+    !subtitlesButton.hasAttribute("disabled") &&
+    subtitlesButton.getAttribute("aria-disabled") !== "true"
+  );
 }
 
 function isMarginYouTubeMutation(mutation: MutationRecord): boolean {

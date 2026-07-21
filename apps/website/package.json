@@ -1,8 +1,8 @@
 {
   "name": "@margin/website",
   "version": "0.1.0",
-  "description": "Marketing website for Margin.",
   "private": true,
+  "description": "Marketing website for Margin.",
   "type": "module",
   "scripts": {
     "dev": "astro dev",

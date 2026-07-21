@@ -36,7 +36,7 @@ export class TranslationQueue<T> {
         this.#pending.set(item.id, item);
       }
     }
-    void this.#drain();
+    this.#drain();
   }
 
   clear(): void {
@@ -51,7 +51,7 @@ export class TranslationQueue<T> {
     if (options.concurrency !== undefined) {
       this.#concurrency = options.concurrency;
     }
-    void this.#drain();
+    this.#drain();
   }
 
   get size(): number {
@@ -84,7 +84,10 @@ export class TranslationQueue<T> {
   }
 }
 
-export function compareQueueItems<T>(left: TranslationQueueItem<T>, right: TranslationQueueItem<T>): number {
+export function compareQueueItems<T>(
+  left: TranslationQueueItem<T>,
+  right: TranslationQueueItem<T>
+): number {
   return (
     left.priority - right.priority ||
     (left.contentPriority ?? 0) - (right.contentPriority ?? 0) ||

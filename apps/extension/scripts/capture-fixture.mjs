@@ -40,7 +40,9 @@ await writeFile(expectedOutputPath, expectedSkeleton);
 
 console.log(`Captured fixture HTML: ${htmlOutputPath}`);
 console.log(`Created expectation skeleton: ${expectedOutputPath}`);
-console.log("Review both files before committing. Remove personal data and fill expectedTexts/excludedTexts.");
+console.log(
+  "Review both files before committing. Remove personal data and fill expectedTexts/excludedTexts."
+);
 
 function parseArgs(values) {
   const parsed = {};
@@ -139,7 +141,9 @@ async function fetchStaticHtml(url) {
 
 async function captureRenderedHtml(url, options) {
   if (typeof WebSocket === "undefined") {
-    throw new Error("Rendered capture requires a Node.js runtime with a global WebSocket implementation.");
+    throw new Error(
+      "Rendered capture requires a Node.js runtime with a global WebSocket implementation."
+    );
   }
   const endpoint = normalizeCdpEndpoint(options.cdpEndpoint);
   const target = await openCdpTarget(endpoint);
@@ -151,9 +155,17 @@ async function captureRenderedHtml(url, options) {
     const loadEvent = client.waitForEvent("Page.loadEventFired", 30_000).catch(() => undefined);
     await client.send("Page.navigate", { url });
     await loadEvent;
-    await waitForExpression(client, "document.readyState === 'complete' || document.readyState === 'interactive'", 15_000);
+    await waitForExpression(
+      client,
+      "document.readyState === 'complete' || document.readyState === 'interactive'",
+      15_000
+    );
     if (options.waitSelector) {
-      await waitForExpression(client, `Boolean(document.querySelector(${JSON.stringify(options.waitSelector)}))`, 15_000);
+      await waitForExpression(
+        client,
+        `Boolean(document.querySelector(${JSON.stringify(options.waitSelector)}))`,
+        15_000
+      );
     }
     if (options.waitMs > 0) {
       await delay(options.waitMs);
@@ -163,7 +175,9 @@ async function captureRenderedHtml(url, options) {
       returnByValue: true
     });
     if (result.exceptionDetails) {
-      throw new Error(`Failed to evaluate page HTML: ${result.exceptionDetails.text ?? "unknown exception"}`);
+      throw new Error(
+        `Failed to evaluate page HTML: ${result.exceptionDetails.text ?? "unknown exception"}`
+      );
     }
     const value = result.result?.value;
     if (typeof value !== "string" || !value.trim()) {
@@ -183,7 +197,9 @@ function normalizeCdpEndpoint(value) {
 async function openCdpTarget(endpoint) {
   const response = await fetch(`${endpoint}/json/new?about%3Ablank`, { method: "PUT" });
   if (!response.ok) {
-    throw new Error(`Failed to create Chrome DevTools target: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to create Chrome DevTools target: ${response.status} ${response.statusText}`
+    );
   }
   const target = await response.json();
   if (!target.id || !target.webSocketDebuggerUrl) {
@@ -326,9 +342,7 @@ class CdpClient {
 
 function sanitizeHtml(html) {
   return normalizeWhitespace(
-    stripVolatileAttributes(
-      stripComments(stripUnsafeBlocks(extractBodyContent(html)))
-    )
+    stripVolatileAttributes(stripComments(stripUnsafeBlocks(extractBodyContent(html))))
   );
 }
 
@@ -342,23 +356,47 @@ function stripUnsafeBlocks(html) {
     .replace(/<script\b[\s\S]*?<\/script>/gi, "")
     .replace(/<style\b[\s\S]*?<\/style>/gi, "")
     .replace(/<noscript\b[\s\S]*?<\/noscript>/gi, "")
-    .replace(/<div\b[^>]*class=(["'])[^"']*\bmargin-translation\b[^"']*\1[^>]*>[\s\S]*?<\/div>/gi, "");
+    .replace(
+      /<div\b[^>]*class=(["'])[^"']*\bmargin-translation\b[^"']*\1[^>]*>[\s\S]*?<\/div>/gi,
+      ""
+    );
 }
 
 function stripComments(html) {
   return html.replace(/<!--[\s\S]*?-->/g, "");
 }
 
+const VOLATILE_ATTRIBUTE_NAME_PATTERN =
+  /^(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style|data-margin-[a-z0-9-]+|data-reactroot|data-reactid|data-nextjs-router|data-hydration-on-demand)$/i;
+
 function stripVolatileAttributes(html) {
+  // Rebuild each opening tag from parsed attribute tokens and drop volatile
+  // ones by exact name match, rather than deleting substrings from the whole
+  // document — substring deletion can splice surrounding text into a new
+  // strippable attribute and needs repeated passes to be safe.
   return html
-    .replace(/\sdata-margin-[a-z0-9-]+=(?:"[^"]*"|'[^']*')/gi, "")
-    .replace(/\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)="[^"]*"/gi, "")
-    .replace(/\s(?:on[a-z]+|nonce|integrity|crossorigin|referrerpolicy|srcset|sizes|style)='[^']*'/gi, "")
-    .replace(/\s(?:data-reactroot|data-reactid|data-nextjs-router|data-hydration-on-demand)="[^"]*"/gi, "")
-    .replace(/\s(href|src)="https?:\/\/([^/"?#]+)([^"?#]*)[^"]*"/gi, (_match, attribute, host, pathname) => {
-      const safePath = pathname && pathname !== "/" ? pathname : "";
-      return ` ${attribute}="https://${host}${safePath}"`;
-    });
+    .replace(
+      /<([a-zA-Z][^\s/>]*)((?:[^>"']|"[^"]*"|'[^']*')*?)(\/?)>/g,
+      (_match, tagName, attributeText, selfClosing) => {
+        const kept = [];
+        const attributePattern = /([^\s"'>/=]+)(\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*))?/g;
+        let attribute;
+        while ((attribute = attributePattern.exec(attributeText)) !== null) {
+          if (!VOLATILE_ATTRIBUTE_NAME_PATTERN.test(attribute[1])) {
+            kept.push(attribute[0]);
+          }
+        }
+        const attributes = kept.length > 0 ? ` ${kept.join(" ")}` : "";
+        return `<${tagName}${attributes}${selfClosing}>`;
+      }
+    )
+    .replace(
+      /\s(href|src)="https?:\/\/([^/"?#]+)([^"?#]*)[^"]*"/gi,
+      (_match, attribute, host, pathname) => {
+        const safePath = pathname && pathname !== "/" ? pathname : "";
+        return ` ${attribute}="https://${host}${safePath}"`;
+      }
+    );
 }
 
 function normalizeWhitespace(html) {

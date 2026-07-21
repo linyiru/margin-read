@@ -1,4 +1,9 @@
-import { clearPersistentCache, getCachedTranslation, getSettings, setCachedTranslation } from "../shared/storage";
+import {
+  clearPersistentCache,
+  getCachedTranslation,
+  getSettings,
+  setCachedTranslation
+} from "../shared/storage";
 import type {
   ExtensionSettings,
   RuntimeMessage,
@@ -44,7 +49,10 @@ export async function handleMessage(message: RuntimeMessage): Promise<unknown> {
   }
 
   if (message.type === "LIST_MODELS") {
-    return listProviderModels({ ...message.settings, apiKey: normalizeApiKey(message.settings.apiKey) });
+    return listProviderModels({
+      ...message.settings,
+      apiKey: normalizeApiKey(message.settings.apiKey)
+    });
   }
 
   return { ok: false, error: `Unsupported runtime message: ${getRuntimeMessageType(message)}.` };
@@ -77,8 +85,8 @@ async function translateBatch(segments: TextSegment[]): Promise<TranslateBatchRe
     const cached =
       settings.cacheMode === "disabled"
         ? undefined
-        : sessionCache.get(cacheKey) ??
-          (settings.cacheMode === "persistent" ? await getCachedTranslation(cacheKey) : undefined);
+        : (sessionCache.get(cacheKey) ??
+          (settings.cacheMode === "persistent" ? await getCachedTranslation(cacheKey) : undefined));
 
     if (cached) {
       results.push({ id: segment.id, text: cached });
@@ -106,7 +114,10 @@ async function translateBatch(segments: TextSegment[]): Promise<TranslateBatchRe
 }
 
 function normalizeApiKey(apiKey: string): string {
-  return apiKey.trim().replace(/^Bearer\s+/i, "").trim();
+  return apiKey
+    .trim()
+    .replace(/^Bearer\s+/i, "")
+    .trim();
 }
 
 function getRuntimeMessageType(message: unknown): string {
@@ -133,7 +144,10 @@ async function listProviderModels(
     const provider = getProvider(settings.provider);
     return { ok: true, models: await provider.listModels(settings) };
   } catch (error: unknown) {
-    return { ok: false, error: error instanceof Error ? error.message : "Unsupported translation provider." };
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Unsupported translation provider."
+    };
   }
 }
 

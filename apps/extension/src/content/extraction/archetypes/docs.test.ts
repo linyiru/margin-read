@@ -11,7 +11,9 @@ describe("detectDocsArchetypeConfidence", () => {
       </main>
     `);
 
-    expect(detectDocsArchetypeConfidence(document)).toBeGreaterThanOrEqual(DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectDocsArchetypeConfidence(document)).toBeGreaterThanOrEqual(
+      DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 
   it("recognizes Docusaurus-style docs with markdown containers", () => {
@@ -26,7 +28,9 @@ describe("detectDocsArchetypeConfidence", () => {
       </main>
     `);
 
-    expect(detectDocsArchetypeConfidence(document)).toBeGreaterThanOrEqual(DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectDocsArchetypeConfidence(document)).toBeGreaterThanOrEqual(
+      DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 
   it("does not classify normal article pages as docs", () => {
@@ -38,7 +42,9 @@ describe("detectDocsArchetypeConfidence", () => {
       </article>
     `);
 
-    expect(detectDocsArchetypeConfidence(document)).toBeLessThan(DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectDocsArchetypeConfidence(document)).toBeLessThan(
+      DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 
   it("does not classify isolated data-as components as docs", () => {
@@ -48,7 +54,9 @@ describe("detectDocsArchetypeConfidence", () => {
       </section>
     `);
 
-    expect(detectDocsArchetypeConfidence(document)).toBeLessThan(DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectDocsArchetypeConfidence(document)).toBeLessThan(
+      DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 
   it("requires structure signals beyond repeated data-as blocks", () => {
@@ -60,7 +68,9 @@ describe("detectDocsArchetypeConfidence", () => {
       </section>
     `);
 
-    expect(detectDocsArchetypeConfidence(document)).toBeLessThan(DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectDocsArchetypeConfidence(document)).toBeLessThan(
+      DOCS_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 });
 

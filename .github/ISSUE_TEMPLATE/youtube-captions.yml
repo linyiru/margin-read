@@ -76,4 +76,3 @@ body:
       options:
         - label: I did not include API keys, private videos, account tokens, or confidential data.
           required: true
-

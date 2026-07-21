@@ -26,7 +26,8 @@ describe("display preview", () => {
 
     styleSelect.value = "card";
     markerInput.checked = false;
-    const targetLanguageInput = document.querySelector<HTMLInputElement>('[name="targetLanguage"]')!;
+    const targetLanguageInput =
+      document.querySelector<HTMLInputElement>('[name="targetLanguage"]')!;
     syncDisplayPreview({ marker, markerInput, root, styleSelect, targetLanguageInput });
 
     expect(root.dataset.previewStyle).toBe("card");
@@ -49,7 +50,8 @@ describe("display preview", () => {
     const styleSelect = document.querySelector<HTMLSelectElement>('[name="displayStyle"]')!;
     const markerInput = document.querySelector<HTMLInputElement>('[name="showTranslationLabel"]')!;
     const marker = document.querySelector<HTMLElement>("#display-style-preview-marker")!;
-    const targetLanguageInput = document.querySelector<HTMLInputElement>('[name="targetLanguage"]')!;
+    const targetLanguageInput =
+      document.querySelector<HTMLInputElement>('[name="targetLanguage"]')!;
 
     styleSelect.value = "focus";
     styleSelect.dispatchEvent(new Event("change"));

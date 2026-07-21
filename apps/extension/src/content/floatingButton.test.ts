@@ -9,13 +9,16 @@ function getHost(): HTMLElement | null {
 
 function getPrimaryButton(): HTMLButtonElement | null {
   return (
-    getHost()?.shadowRoot?.querySelector<HTMLButtonElement>(".margin-floating__button--primary") ?? null
+    getHost()?.shadowRoot?.querySelector<HTMLButtonElement>(".margin-floating__button--primary") ??
+    null
   );
 }
 
 function getCloseButton(): HTMLButtonElement | null {
   return (
-    getHost()?.shadowRoot?.querySelector<HTMLButtonElement>(".margin-floating__button--secondary") ?? null
+    getHost()?.shadowRoot?.querySelector<HTMLButtonElement>(
+      ".margin-floating__button--secondary"
+    ) ?? null
   );
 }
 
@@ -99,7 +102,12 @@ describe("installFloatingButton", () => {
 
   it("turns the feature off via onClose when the close button is clicked", () => {
     const onClose = vi.fn<() => void>();
-    handle = installFloatingButton({ document, initialEnabled: false, onToggle: onToggle, onClose });
+    handle = installFloatingButton({
+      document,
+      initialEnabled: false,
+      onToggle: onToggle,
+      onClose
+    });
     handle.syncFromSettings({ showFloatingButton: true });
 
     getCloseButton()?.click();

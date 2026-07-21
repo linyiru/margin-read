@@ -33,7 +33,9 @@ export interface TranslationRendererOptions {
   onRetry: (block: HTMLElement) => void;
 }
 
-export function createTranslationRenderer(options: TranslationRendererOptions): TranslationRenderer {
+export function createTranslationRenderer(
+  options: TranslationRendererOptions
+): TranslationRenderer {
   let displayStyle = options.displayStyle;
   let showTranslationLabel = options.showTranslationLabel;
   let translationLabel = options.translationLabel;
@@ -135,14 +137,17 @@ function applyTranslationLabel(
 }
 
 function createTranslationElement(source: HTMLElement): HTMLElement {
-  return document.createElement(isLegacySplitBlock(source) || getRenderStrategy(source) === "inline" ? "span" : "div");
+  return document.createElement(
+    isLegacySplitBlock(source) || getRenderStrategy(source) === "inline" ? "span" : "div"
+  );
 }
 
 function getOrCreateTranslationElement(source: HTMLElement): HTMLElement {
   const renderStrategy = getRenderStrategy(source);
   if ((renderStrategy === "inline" && source.matches("dt")) || renderStrategy === "table-cell") {
     const existing = Array.from(source.children).find(
-      (child): child is HTMLElement => child instanceof HTMLElement && child.classList.contains(TRANSLATION_CLASS)
+      (child): child is HTMLElement =>
+        child instanceof HTMLElement && child.classList.contains(TRANSLATION_CLASS)
     );
     if (existing) {
       return existing;

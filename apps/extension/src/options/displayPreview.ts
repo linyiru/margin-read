@@ -19,7 +19,13 @@ export function initializeDisplayPreview(): void {
     return;
   }
 
-  const elements = { marker, markerInput, root, styleSelect, targetLanguageInput: targetLanguageInput ?? undefined };
+  const elements = {
+    marker,
+    markerInput,
+    root,
+    styleSelect,
+    targetLanguageInput: targetLanguageInput ?? undefined
+  };
   const sync = (): void => {
     syncDisplayPreview(elements);
   };

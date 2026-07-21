@@ -28,7 +28,11 @@ export function collectLegacyBlocks(document: Document, options: TextBlockOption
   );
 }
 
-function splitLegacyContainer(container: HTMLElement, document: Document, options: TextBlockOptions): HTMLElement[] {
+function splitLegacyContainer(
+  container: HTMLElement,
+  document: Document,
+  options: TextBlockOptions
+): HTMLElement[] {
   return splitTextByBrGroups(container, document, options, "marginLegacyBlock");
 }
 
@@ -49,7 +53,11 @@ function isLegacyContainer(element: HTMLElement, options: TextBlockOptions): boo
   return element.querySelectorAll("p, li, blockquote, h1, h2, h3").length === 0;
 }
 
-function hasNestedLegacyCandidate(element: HTMLElement, textLength: number, options: TextBlockOptions): boolean {
+function hasNestedLegacyCandidate(
+  element: HTMLElement,
+  textLength: number,
+  options: TextBlockOptions
+): boolean {
   return Array.from(element.querySelectorAll<HTMLElement>("td, font")).some((child) => {
     if (child === element || shouldSkipElement(child, options)) {
       return false;

@@ -1,0 +1,4 @@
+# Run `git config blame.ignoreRevsFile .git-blame-ignore-revs` to activate.
+
+# Adopt oxfmt as the repository formatter (whole-repo reformat)
+bb9b63d9c1bcc0d52356c82a4d97a2ef06d45a95

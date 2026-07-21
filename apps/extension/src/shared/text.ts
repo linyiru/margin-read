@@ -5,7 +5,8 @@ export function normalizeText(value: string): string {
 // Han (incl. extensions via the script property), Hiragana, Katakana, Hangul.
 // Uses Unicode script escapes so supplementary-plane ideographs are covered without
 // hand-listing surrogate ranges.
-const CJK_LETTER_PATTERN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+const CJK_LETTER_PATTERN =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 
 // Sentence-terminating marks that signal "this is a complete utterance" — the strongest
 // cheap discriminator between real (often short) CJK prose/dialogue and short UI labels,
@@ -26,7 +27,7 @@ const LETTER_PATTERN = /\p{L}/u;
 // Code-point count rather than UTF-16 code-unit count, so supplementary-plane characters
 // (rare ideographs, emoji) count as one rather than two.
 export function countCodePoints(value: string): number {
-  return [...value].length;
+  return Array.from(value).length;
 }
 
 // Fraction of letters that are CJK. The denominator counts only letters (not punctuation,

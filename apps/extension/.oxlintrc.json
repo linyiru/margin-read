@@ -1,0 +1,51 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "options": {
+    "typeAware": true
+  },
+  "env": {
+    "browser": true,
+    "webextensions": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "ignorePatterns": ["coverage/**", "dist/**", "node_modules/**", "test/fixtures/**"],
+  "rules": {
+    "typescript/consistent-type-imports": ["error", { "prefer": "type-imports" }],
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error"
+  },
+  "overrides": [
+    {
+      "files": ["*.config.mjs", "scripts/**/*.mjs"],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "typescript/await-thenable": "off",
+        "typescript/no-floating-promises": "off",
+        "typescript/no-misused-promises": "off",
+        "typescript/no-unnecessary-type-assertion": "off",
+        "typescript/require-await": "off",
+        "typescript/require-array-sort-compare": "off",
+        "typescript/no-unsafe-assignment": "off",
+        "typescript/no-unsafe-member-access": "off",
+        "typescript/no-unsafe-return": "off"
+      }
+    },
+    {
+      "files": ["src/**/*.test.ts", "test/**/*.ts"],
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "typescript/no-misused-spread": "off"
+      }
+    }
+  ]
+}

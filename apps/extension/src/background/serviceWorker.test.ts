@@ -1,7 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CACHE_KEY_PREFIX, DEFAULT_SETTINGS, PROVIDER_DEFAULTS, SETTINGS_KEY } from "../shared/defaults";
+import {
+  CACHE_KEY_PREFIX,
+  DEFAULT_SETTINGS,
+  PROVIDER_DEFAULTS,
+  SETTINGS_KEY
+} from "../shared/defaults";
 import type { LocalTranslationProviderId } from "../shared/localProviders";
-import type { ExtensionSettings, RuntimeMessage, TextSegment, TranslationResult } from "../shared/types";
+import type {
+  ExtensionSettings,
+  RuntimeMessage,
+  TextSegment,
+  TranslationResult
+} from "../shared/types";
 import type * as ServiceWorkerModuleType from "./serviceWorker";
 
 type ServiceWorkerModule = typeof ServiceWorkerModuleType;
@@ -45,7 +55,8 @@ type MessageListener = (
 
 const storageStore = new Map<string, unknown>();
 const fetchCalls: FetchCall[] = [];
-let fetchResponder: (url: string, init: RequestInit) => Response | Promise<Response> = () => new Response("noop");
+let fetchResponder: (url: string, init: RequestInit) => Response | Promise<Response> = () =>
+  new Response("noop");
 let registeredListener: MessageListener | undefined;
 
 async function loadModule(): Promise<ServiceWorkerModule> {
@@ -101,7 +112,8 @@ beforeEach(() => {
   });
 
   const fakeFetch = vi.fn((input: RequestInfo | URL, init: RequestInit = {}) => {
-    const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
+    const url =
+      typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
     fetchCalls.push({ url, init });
     return Promise.resolve(fetchResponder(url, init));
   });
@@ -117,7 +129,10 @@ function saveSettings(overrides: Partial<ExtensionSettings>): void {
 }
 
 function jsonResponse(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" }
+  });
 }
 
 describe("handleMessage GET_SETTINGS", () => {
@@ -176,7 +191,10 @@ describe("handleMessage TRANSLATE_BATCH", () => {
     saveSettings({ provider: "openai", apiKey: "" });
     const { handleMessage } = await loadModule();
 
-    const result = (await handleMessage({ type: "TRANSLATE_BATCH", segments })) as TranslateBatchResult;
+    const result = (await handleMessage({
+      type: "TRANSLATE_BATCH",
+      segments
+    })) as TranslateBatchResult;
 
     expect(result.ok).toBe(false);
     expect(result.error).toMatch(/Configure an API key/);
@@ -199,7 +217,10 @@ describe("handleMessage TRANSLATE_BATCH", () => {
       }
       const { handleMessage } = await loadModule();
 
-      const result = (await handleMessage({ type: "TRANSLATE_BATCH", segments })) as TranslateBatchResult;
+      const result = (await handleMessage({
+        type: "TRANSLATE_BATCH",
+        segments
+      })) as TranslateBatchResult;
 
       expect(result.ok).toBe(true);
       expect(result.results).toEqual([{ id: "s1", text: "你好" }]);
@@ -207,11 +228,19 @@ describe("handleMessage TRANSLATE_BATCH", () => {
   );
 
   it("dispatches through the registry and caches results in session and persistent stores", async () => {
-    saveSettings({ provider: "openai", apiKey: "sk-test", cacheMode: "persistent", targetLanguage: "繁體中文" });
+    saveSettings({
+      provider: "openai",
+      apiKey: "sk-test",
+      cacheMode: "persistent",
+      targetLanguage: "繁體中文"
+    });
     stubOpenAIResponse([{ id: "s1", text: "你好" }]);
     const { handleMessage } = await loadModule();
 
-    const first = (await handleMessage({ type: "TRANSLATE_BATCH", segments })) as TranslateBatchResult;
+    const first = (await handleMessage({
+      type: "TRANSLATE_BATCH",
+      segments
+    })) as TranslateBatchResult;
     expect(first.results).toEqual([{ id: "s1", text: "你好" }]);
     expect(fetchCalls).toHaveLength(1);
 
@@ -219,11 +248,16 @@ describe("handleMessage TRANSLATE_BATCH", () => {
       throw new Error("should not refetch on cache hit");
     };
 
-    const second = (await handleMessage({ type: "TRANSLATE_BATCH", segments })) as TranslateBatchResult;
+    const second = (await handleMessage({
+      type: "TRANSLATE_BATCH",
+      segments
+    })) as TranslateBatchResult;
     expect(second.results).toEqual([{ id: "s1", text: "你好" }]);
     expect(fetchCalls).toHaveLength(1);
 
-    const persistentKeys = Array.from(storageStore.keys()).filter((key) => key.startsWith(CACHE_KEY_PREFIX));
+    const persistentKeys = Array.from(storageStore.keys()).filter((key) =>
+      key.startsWith(CACHE_KEY_PREFIX)
+    );
     expect(persistentKeys).toHaveLength(1);
   });
 
@@ -234,7 +268,9 @@ describe("handleMessage TRANSLATE_BATCH", () => {
 
     await handleMessage({ type: "TRANSLATE_BATCH", segments });
 
-    const persistentKeys = Array.from(storageStore.keys()).filter((key) => key.startsWith(CACHE_KEY_PREFIX));
+    const persistentKeys = Array.from(storageStore.keys()).filter((key) =>
+      key.startsWith(CACHE_KEY_PREFIX)
+    );
     expect(persistentKeys).toHaveLength(0);
   });
 
@@ -247,7 +283,9 @@ describe("handleMessage TRANSLATE_BATCH", () => {
     await handleMessage({ type: "TRANSLATE_BATCH", segments });
 
     expect(fetchCalls).toHaveLength(2);
-    const persistentKeys = Array.from(storageStore.keys()).filter((key) => key.startsWith(CACHE_KEY_PREFIX));
+    const persistentKeys = Array.from(storageStore.keys()).filter((key) =>
+      key.startsWith(CACHE_KEY_PREFIX)
+    );
     expect(persistentKeys).toHaveLength(0);
   });
 
@@ -379,7 +417,9 @@ describe("handleMessage unknown messages", () => {
   it("returns an error including the message type", async () => {
     const { handleMessage } = await loadModule();
 
-    const result = (await handleMessage({ type: "BOGUS" } as unknown as RuntimeMessage)) as UnsupportedResult;
+    const result = (await handleMessage({
+      type: "BOGUS"
+    } as unknown as RuntimeMessage)) as UnsupportedResult;
 
     expect(result.ok).toBe(false);
     expect(result.error).toMatch(/BOGUS/);

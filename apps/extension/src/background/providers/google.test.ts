@@ -29,7 +29,8 @@ function stubFetch(response: Response): { fetch: typeof fetch; calls: FetchCall[
   const calls: FetchCall[] = [];
   const fakeFetch = vi.fn((input: RequestInfo | URL, init: RequestInit = {}) => {
     const rawBody = init.body;
-    const body = typeof rawBody === "string" ? (JSON.parse(rawBody) as Record<string, unknown>) : {};
+    const body =
+      typeof rawBody === "string" ? (JSON.parse(rawBody) as Record<string, unknown>) : {};
     calls.push({ url: stringifyUrl(input), init, body });
     return Promise.resolve(response);
   });
@@ -96,14 +97,18 @@ describe("googleProvider.translate", () => {
     expect(generationConfig.responseJsonSchema.type).toBe("object");
     expect(generationConfig.responseJsonSchema.properties).toHaveProperty("translations");
     expect(generationConfig.responseJsonSchema.additionalProperties).toBe(false);
-    expect(generationConfig.responseJsonSchema.properties.translations.items.additionalProperties).toBe(false);
-    expect((calls[0].body.systemInstruction as { parts: Array<{ text: string }> }).parts[0].text).toContain(
-      "Return only valid JSON"
-    );
+    expect(
+      generationConfig.responseJsonSchema.properties.translations.items.additionalProperties
+    ).toBe(false);
+    expect(
+      (calls[0].body.systemInstruction as { parts: Array<{ text: string }> }).parts[0].text
+    ).toContain("Return only valid JSON");
   });
 
   it("URL-encodes special characters in model name and api key", async () => {
-    const body = JSON.stringify({ candidates: [{ content: { parts: [{ text: '{"translations":[]}' }] } }] });
+    const body = JSON.stringify({
+      candidates: [{ content: { parts: [{ text: '{"translations":[]}' }] } }]
+    });
     const { fetch: stub, calls } = stubFetch(new Response(body, { status: 200 }));
     vi.stubGlobal("fetch", stub);
 
@@ -117,7 +122,9 @@ describe("googleProvider.translate", () => {
   });
 
   it("trims a trailing slash from the configured endpoint", async () => {
-    const body = JSON.stringify({ candidates: [{ content: { parts: [{ text: '{"translations":[]}' }] } }] });
+    const body = JSON.stringify({
+      candidates: [{ content: { parts: [{ text: '{"translations":[]}' }] } }]
+    });
     const { fetch: stub, calls } = stubFetch(new Response(body, { status: 200 }));
     vi.stubGlobal("fetch", stub);
 
@@ -130,10 +137,14 @@ describe("googleProvider.translate", () => {
   });
 
   it("throws when no candidate text is returned", async () => {
-    const { fetch: stub } = stubFetch(new Response(JSON.stringify({ candidates: [] }), { status: 200 }));
+    const { fetch: stub } = stubFetch(
+      new Response(JSON.stringify({ candidates: [] }), { status: 200 })
+    );
     vi.stubGlobal("fetch", stub);
 
-    await expect(googleProvider.translate(segments, makeSettings())).rejects.toThrow(/did not include translated content/);
+    await expect(googleProvider.translate(segments, makeSettings())).rejects.toThrow(
+      /did not include translated content/
+    );
   });
 
   it("propagates non-2xx errors with provider status", async () => {
@@ -148,9 +159,21 @@ describe("googleProvider.listModels", () => {
   it("strips models/ prefix and filters by generateContent support", async () => {
     const body = JSON.stringify({
       models: [
-        { name: "models/gemini-1.5-flash", displayName: "Gemini 1.5 Flash", supportedGenerationMethods: ["generateContent"] },
-        { name: "models/gemini-1.5-pro", displayName: "Gemini 1.5 Pro", supportedGenerationMethods: ["generateContent", "countTokens"] },
-        { name: "models/embedding-001", displayName: "Embedding 001", supportedGenerationMethods: ["embedContent"] },
+        {
+          name: "models/gemini-1.5-flash",
+          displayName: "Gemini 1.5 Flash",
+          supportedGenerationMethods: ["generateContent"]
+        },
+        {
+          name: "models/gemini-1.5-pro",
+          displayName: "Gemini 1.5 Pro",
+          supportedGenerationMethods: ["generateContent", "countTokens"]
+        },
+        {
+          name: "models/embedding-001",
+          displayName: "Embedding 001",
+          supportedGenerationMethods: ["embedContent"]
+        },
         { name: "" },
         { displayName: "no name" }
       ]

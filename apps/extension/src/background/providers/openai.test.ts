@@ -22,7 +22,8 @@ function stubFetch(response: Response): { fetch: typeof fetch; calls: FetchCall[
   const calls: FetchCall[] = [];
   const fakeFetch = vi.fn((input: RequestInfo | URL, init: RequestInit = {}) => {
     const rawBody = init.body;
-    const body = typeof rawBody === "string" ? (JSON.parse(rawBody) as Record<string, unknown>) : {};
+    const body =
+      typeof rawBody === "string" ? (JSON.parse(rawBody) as Record<string, unknown>) : {};
     calls.push({ url: stringifyUrl(input), init, body });
     return Promise.resolve(response);
   });
@@ -82,21 +83,23 @@ describe("openaiProvider.translate", () => {
   });
 
   it("throws when provider returns no content", async () => {
-    const { fetch: stub } = stubFetch(new Response(JSON.stringify({ choices: [{}] }), { status: 200 }));
+    const { fetch: stub } = stubFetch(
+      new Response(JSON.stringify({ choices: [{}] }), { status: 200 })
+    );
     vi.stubGlobal("fetch", stub);
 
-    await expect(openaiProvider.translate(segments, makeSettings({ provider: "openai", apiKey: "sk-test" }))).rejects.toThrow(
-      /did not include translated content/
-    );
+    await expect(
+      openaiProvider.translate(segments, makeSettings({ provider: "openai", apiKey: "sk-test" }))
+    ).rejects.toThrow(/did not include translated content/);
   });
 
   it("propagates non-2xx errors with provider status", async () => {
     const { fetch: stub } = stubFetch(new Response("unauthorized", { status: 401 }));
     vi.stubGlobal("fetch", stub);
 
-    await expect(openaiProvider.translate(segments, makeSettings({ provider: "openai", apiKey: "bad" }))).rejects.toThrow(
-      /401/
-    );
+    await expect(
+      openaiProvider.translate(segments, makeSettings({ provider: "openai", apiKey: "bad" }))
+    ).rejects.toThrow(/401/);
   });
 });
 
@@ -174,7 +177,9 @@ describe("openaiProvider.listModels", () => {
   });
 
   it("preserves the host but rewrites pathname for compatible endpoints", async () => {
-    const { fetch: stub, calls } = stubFetch(new Response(JSON.stringify({ data: [] }), { status: 200 }));
+    const { fetch: stub, calls } = stubFetch(
+      new Response(JSON.stringify({ data: [] }), { status: 200 })
+    );
     vi.stubGlobal("fetch", stub);
 
     await openaiCompatibleProvider.listModels(

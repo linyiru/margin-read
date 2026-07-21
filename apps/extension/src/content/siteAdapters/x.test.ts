@@ -79,7 +79,9 @@ describe("xAdapter.collectBlocks (tweets)", () => {
     expect(blocks).toHaveLength(1);
     expect(blocks[0]?.getAttribute("data-testid")).toBe("tweetText");
     expect(blocks[0]?.dataset.marginXBlock).toBe("tweet-text");
-    expect(normalize(blocks[0]?.textContent ?? "")).toBe("Anthropic just leaked their agent roadmap in 22 minutes.");
+    expect(normalize(blocks[0]?.textContent ?? "")).toBe(
+      "Anthropic just leaked their agent roadmap in 22 minutes."
+    );
   });
 
   it("splits long X posts on paragraph boundaries", () => {
@@ -117,7 +119,9 @@ Third paragraph keeps the translated structure readable.</div>
     const blocks = collect(document, withX());
 
     expect(blocks).toHaveLength(1);
-    expect(normalize(blocks[0]?.textContent ?? "")).toBe("The main post has enough text to translate.");
+    expect(normalize(blocks[0]?.textContent ?? "")).toBe(
+      "The main post has enough text to translate."
+    );
   });
 
   it("can include quoted X post text when enabled", () => {
@@ -165,7 +169,9 @@ Third paragraph keeps the translated structure readable.</div>
     const blocks = collect(document, withX({ xSkipNativeTranslatedPosts: true }));
 
     expect(blocks).toHaveLength(1);
-    expect(normalize(blocks[0]?.textContent ?? "")).toBe("The main post has enough text to translate.");
+    expect(normalize(blocks[0]?.textContent ?? "")).toBe(
+      "The main post has enough text to translate."
+    );
   });
 });
 
@@ -229,7 +235,9 @@ describe("xAdapter.collectBlocks (articles)", () => {
     const blocks = collect(document, withX({ xTranslateArticles: true }));
 
     expect(blocks).toHaveLength(1);
-    expect(normalize(blocks[0]?.textContent ?? "")).toBe("A readable article paragraph should still be translated.");
+    expect(normalize(blocks[0]?.textContent ?? "")).toBe(
+      "A readable article paragraph should still be translated."
+    );
   });
 
   it("skips X article blocks that already received integrated translations", () => {
