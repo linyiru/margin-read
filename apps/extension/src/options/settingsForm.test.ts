@@ -35,7 +35,9 @@ describe("settings form", () => {
   it("fills and reads the independent translation marker setting", () => {
     fillForm({ ...DEFAULT_SETTINGS, showTranslationLabel: true });
 
-    expect(document.querySelector<HTMLInputElement>('[name="showTranslationLabel"]')?.checked).toBe(true);
+    expect(document.querySelector<HTMLInputElement>('[name="showTranslationLabel"]')?.checked).toBe(
+      true
+    );
     expect(readForm().showTranslationLabel).toBe(true);
   });
 

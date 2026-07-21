@@ -5,7 +5,10 @@ interface CachePrivacySaveDependencies {
   clearPersistentCache(): Promise<unknown>;
 }
 
-export function shouldClearPersistentCache(previousCacheMode: CacheMode, nextCacheMode: CacheMode): boolean {
+export function shouldClearPersistentCache(
+  previousCacheMode: CacheMode,
+  nextCacheMode: CacheMode
+): boolean {
   return previousCacheMode === "persistent" && nextCacheMode !== "persistent";
 }
 

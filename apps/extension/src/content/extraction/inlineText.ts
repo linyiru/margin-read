@@ -48,14 +48,18 @@ const INLINE_ELEMENT_TAGS = new Set([
 ]);
 
 // Blocks already produced by the semantic collectors — never re-wrap their own text.
-const ALREADY_HANDLED_BLOCK_SELECTOR = "p, li, dt, dd, figcaption, blockquote, h1, h2, h3, h4, h5, h6";
+const ALREADY_HANDLED_BLOCK_SELECTOR =
+  "p, li, dt, dd, figcaption, blockquote, h1, h2, h3, h4, h5, h6";
 
 const MAX_LINK_TEXT_RATIO = 0.5;
 
 // Recovers translatable prose that is not wrapped in its own semantic block element by
 // finding containers that directly own loose inline text and splitting that text into
 // run-based synthetic blocks.
-export function collectInlineRunBlocks(document: Document, options: TextBlockOptions): HTMLElement[] {
+export function collectInlineRunBlocks(
+  document: Document,
+  options: TextBlockOptions
+): HTMLElement[] {
   const blocks: HTMLElement[] = [];
   for (const container of findInlineTextContainers(document, options)) {
     blocks.push(...splitContainerInlineRuns(container, document, options));
@@ -93,7 +97,10 @@ function findInlineTextContainers(document: Document, options: TextBlockOptions)
   return containers;
 }
 
-function nearestBlockContainer(element: HTMLElement | null, options: TextBlockOptions): HTMLElement | undefined {
+function nearestBlockContainer(
+  element: HTMLElement | null,
+  options: TextBlockOptions
+): HTMLElement | undefined {
   let current: HTMLElement | null = element;
   while (current && INLINE_ELEMENT_TAGS.has(current.tagName)) {
     current = current.parentElement;
@@ -106,7 +113,11 @@ function nearestBlockContainer(element: HTMLElement | null, options: TextBlockOp
 
   // Semantic leaves are already extracted whole; table cells are structural and their real
   // content lives in inner blocks (so loose cell text is metadata/UI we should leave alone).
-  if (current.matches(ALREADY_HANDLED_BLOCK_SELECTOR) || current.tagName === "TD" || current.tagName === "TH") {
+  if (
+    current.matches(ALREADY_HANDLED_BLOCK_SELECTOR) ||
+    current.tagName === "TD" ||
+    current.tagName === "TH"
+  ) {
     return undefined;
   }
 

@@ -7,13 +7,7 @@ export interface LayoutSnapshot {
   parentRect?: DOMRectReadOnly;
   sourceStyle: Pick<
     CSSStyleDeclaration,
-    | "alignSelf"
-    | "boxSizing"
-    | "display"
-    | "marginLeft"
-    | "marginRight"
-    | "maxWidth"
-    | "width"
+    "alignSelf" | "boxSizing" | "display" | "marginLeft" | "marginRight" | "maxWidth" | "width"
   >;
   parentStyle?: Pick<CSSStyleDeclaration, "display" | "flexDirection">;
 }

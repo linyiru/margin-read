@@ -9,7 +9,19 @@ const ARTICLE_CONTAINER_SELECTORS = [
   ".post-content",
   ".story-content"
 ];
-const ARTICLE_BLOCK_SELECTORS = ["p", "li", "dt", "dd", "figcaption", "blockquote", "h1", "h2", "h3", "td", "th"];
+const ARTICLE_BLOCK_SELECTORS = [
+  "p",
+  "li",
+  "dt",
+  "dd",
+  "figcaption",
+  "blockquote",
+  "h1",
+  "h2",
+  "h3",
+  "td",
+  "th"
+];
 const ARTICLE_ARCHETYPE_SELECTOR = ARTICLE_CONTAINER_SELECTORS.flatMap((containerSelector) =>
   ARTICLE_BLOCK_SELECTORS.map((blockSelector) => `${containerSelector} ${blockSelector}`)
 ).join(", ");
@@ -20,12 +32,16 @@ export const ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD = 0.65;
 
 export function collectArticleBlocks(document: Document, options: TextBlockOptions): HTMLElement[] {
   const candidates = document.querySelectorAll<HTMLElement>(ARTICLE_ARCHETYPE_SELECTOR);
-  if (computeArticleArchetypeConfidence(document, candidates.length) < ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD) {
+  if (
+    computeArticleArchetypeConfidence(document, candidates.length) <
+    ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD
+  ) {
     return [];
   }
 
   return Array.from(candidates).filter(
-    (element) => isTranslatableElement(element, options) && shouldIncludeCandidate(element, "archetype")
+    (element) =>
+      isTranslatableElement(element, options) && shouldIncludeCandidate(element, "archetype")
   );
 }
 
@@ -36,7 +52,10 @@ export function detectArticleArchetypeConfidence(document: Document): number {
   );
 }
 
-function computeArticleArchetypeConfidence(document: Document, archetypeBlockCount: number): number {
+function computeArticleArchetypeConfidence(
+  document: Document,
+  archetypeBlockCount: number
+): number {
   if (archetypeBlockCount === 0) {
     return 0;
   }

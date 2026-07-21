@@ -4,7 +4,12 @@ export type DisplayStyle = ModernDisplayStyle | LegacyDisplayStyle;
 
 export type CacheMode = "session" | "persistent" | "disabled";
 
-export type TranslationProviderId = "openai" | "anthropic" | "google" | "openai-compatible" | "anthropic-compatible";
+export type TranslationProviderId =
+  | "openai"
+  | "anthropic"
+  | "google"
+  | "openai-compatible"
+  | "anthropic-compatible";
 
 export const SETTINGS_VERSION = 1;
 

@@ -15,7 +15,9 @@ describe("extractJsonObject", () => {
   });
 
   it("extracts JSON from surrounding text", () => {
-    expect(extractJsonObject('Here is the JSON:\n{"translations":[]}\nThanks.')).toBe('{"translations":[]}');
+    expect(extractJsonObject('Here is the JSON:\n{"translations":[]}\nThanks.')).toBe(
+      '{"translations":[]}'
+    );
   });
 
   it("returns trimmed content when no object exists", () => {

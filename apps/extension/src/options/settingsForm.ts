@@ -58,7 +58,11 @@ export function setInputValue(name: string, value: string): void {
 }
 
 export function getInputValue(name: string): string {
-  return document.querySelector<HTMLInputElement | HTMLSelectElement>(`[name="${name}"]`)?.value.trim() ?? "";
+  return (
+    document
+      .querySelector<HTMLInputElement | HTMLSelectElement>(`[name="${name}"]`)
+      ?.value.trim() ?? ""
+  );
 }
 
 function setCheckboxValue(name: string, checked: boolean): void {

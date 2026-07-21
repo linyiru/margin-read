@@ -22,7 +22,8 @@ function stubFetch(response: Response): { fetch: typeof fetch; calls: FetchCall[
   const calls: FetchCall[] = [];
   const fakeFetch = vi.fn((input: RequestInfo | URL, init: RequestInit = {}) => {
     const rawBody = init.body;
-    const body = typeof rawBody === "string" ? (JSON.parse(rawBody) as Record<string, unknown>) : {};
+    const body =
+      typeof rawBody === "string" ? (JSON.parse(rawBody) as Record<string, unknown>) : {};
     calls.push({ url: stringifyUrl(input), init, body });
     return Promise.resolve(response);
   });
@@ -63,7 +64,10 @@ describe("anthropicProvider.translate", () => {
 
     const results = await anthropicProvider.translate(
       segments,
-      makeSettings({ providerEndpoint: "https://api.anthropic.com/v1/messages", model: "claude-3-5-haiku-latest" })
+      makeSettings({
+        providerEndpoint: "https://api.anthropic.com/v1/messages",
+        model: "claude-3-5-haiku-latest"
+      })
     );
 
     expect(results).toEqual([{ id: "a", text: "你好" }]);
@@ -89,7 +93,9 @@ describe("anthropicProvider.translate", () => {
   });
 
   it("throws when content is empty", async () => {
-    const { fetch: stub } = stubFetch(new Response(JSON.stringify({ content: [] }), { status: 200 }));
+    const { fetch: stub } = stubFetch(
+      new Response(JSON.stringify({ content: [] }), { status: 200 })
+    );
     vi.stubGlobal("fetch", stub);
 
     await expect(anthropicProvider.translate(segments, makeSettings())).rejects.toThrow(

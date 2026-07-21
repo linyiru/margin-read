@@ -1,10 +1,9 @@
 {
   "name": "margin",
   "version": "0.3.7",
-  "description": "Privacy-first bilingual web translation that keeps the original text in place so you never lose context.",
   "private": true,
+  "description": "Privacy-first bilingual web translation that keeps the original text in place so you never lose context.",
   "type": "module",
-  "packageManager": "pnpm@10.15.0",
   "scripts": {
     "build": "pnpm -r build",
     "build:extension": "pnpm --filter @margin/extension build",
@@ -15,6 +14,8 @@
     "check:release-version": "pnpm --filter @margin/extension run check:release-version",
     "clean": "pnpm -r clean",
     "fixture:capture": "pnpm --filter @margin/extension run fixture:capture",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
     "lint": "pnpm --filter @margin/extension lint",
     "package:extension": "pnpm --filter @margin/extension run package",
     "test": "pnpm --filter @margin/extension test",
@@ -25,9 +26,11 @@
     "@types/chrome": "^0.0.268",
     "@vitest/coverage-v8": "^4.1.5",
     "happy-dom": "^20.9.0",
+    "oxfmt": "^0.59.0",
     "oxlint": "^1.74.0",
     "oxlint-tsgolint": "^7.0.2001",
     "typescript": "^7.0.2",
     "vitest": "^4.1.5"
-  }
+  },
+  "packageManager": "pnpm@10.15.0"
 }

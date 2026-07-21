@@ -84,7 +84,10 @@ export class TranslationQueue<T> {
   }
 }
 
-export function compareQueueItems<T>(left: TranslationQueueItem<T>, right: TranslationQueueItem<T>): number {
+export function compareQueueItems<T>(
+  left: TranslationQueueItem<T>,
+  right: TranslationQueueItem<T>
+): number {
   return (
     left.priority - right.priority ||
     (left.contentPriority ?? 0) - (right.contentPriority ?? 0) ||

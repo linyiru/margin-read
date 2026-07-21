@@ -61,10 +61,15 @@ export function installFloatingButton(options: FloatingButtonOptions): FloatingB
     host.setAttribute("translate", "no");
     host.className = "margin-notranslate";
     const shadow = host.attachShadow({ mode: "open" });
-    shadow.append(createFloatingStyles(doc), createFloatingControls(doc, handlePrimaryClick, handleClose));
+    shadow.append(
+      createFloatingStyles(doc),
+      createFloatingControls(doc, handlePrimaryClick, handleClose)
+    );
     doc.documentElement.append(host);
-    primaryButton = shadow.querySelector<HTMLButtonElement>(".margin-floating__button--primary") ?? undefined;
-    const dragHandle = shadow.querySelector<HTMLElement>(".margin-floating__shell") ?? primaryButton;
+    primaryButton =
+      shadow.querySelector<HTMLButtonElement>(".margin-floating__button--primary") ?? undefined;
+    const dragHandle =
+      shadow.querySelector<HTMLElement>(".margin-floating__shell") ?? primaryButton;
     dragHandle?.addEventListener("pointerdown", handlePointerDown);
     applyPosition();
     doc.defaultView?.addEventListener("resize", applyPosition);

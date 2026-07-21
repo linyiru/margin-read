@@ -1,6 +1,15 @@
-import type { Message, MessageCreateParamsNonStreaming, Tool } from "@anthropic-ai/sdk/resources/messages/messages";
+import type {
+  Message,
+  MessageCreateParamsNonStreaming,
+  Tool
+} from "@anthropic-ai/sdk/resources/messages/messages";
 import type { ModelInfo } from "@anthropic-ai/sdk/resources/models";
-import type { ExtensionSettings, ProviderModel, TextSegment, TranslationResult } from "../../shared/types";
+import type {
+  ExtensionSettings,
+  ProviderModel,
+  TextSegment,
+  TranslationResult
+} from "../../shared/types";
 import {
   assertProviderResponse,
   buildTranslationPayload,
@@ -95,7 +104,10 @@ async function listAnthropicModels(settings: ExtensionSettings): Promise<Provide
       (model): model is { id: string; display_name?: string } =>
         typeof model.id === "string" && model.id.length > 0
     )
-    .map((model) => ({ id: model.id, ...(model.display_name ? { displayName: model.display_name } : {}) }));
+    .map((model) => ({
+      id: model.id,
+      ...(model.display_name ? { displayName: model.display_name } : {})
+    }));
 }
 
 function buildAnthropicHeaders(settings: ExtensionSettings): Record<string, string> {

@@ -8,7 +8,10 @@ export async function getSettings(): Promise<ExtensionSettings> {
 }
 
 export async function getStoredSettings(): Promise<Partial<ExtensionSettings> | undefined> {
-  const data = (await chrome.storage.local.get(SETTINGS_KEY)) as Record<string, Partial<ExtensionSettings> | undefined>;
+  const data = (await chrome.storage.local.get(SETTINGS_KEY)) as Record<
+    string,
+    Partial<ExtensionSettings> | undefined
+  >;
   return data[SETTINGS_KEY];
 }
 

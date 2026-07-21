@@ -5,7 +5,8 @@ export function normalizeText(value: string): string {
 // Han (incl. extensions via the script property), Hiragana, Katakana, Hangul.
 // Uses Unicode script escapes so supplementary-plane ideographs are covered without
 // hand-listing surrogate ranges.
-const CJK_LETTER_PATTERN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+const CJK_LETTER_PATTERN =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 
 // Sentence-terminating marks that signal "this is a complete utterance" — the strongest
 // cheap discriminator between real (often short) CJK prose/dialogue and short UI labels,

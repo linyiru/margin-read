@@ -22,15 +22,17 @@ const X_TWEET_PARAGRAPH_BLOCK_DATASET = "marginXParagraphBlock";
 export const xAdapter: SiteAdapter = {
   id: "x",
   matches(document, options) {
-    return Boolean(options.xOptimizedTranslation && document.querySelector(X_TWEET_ARTICLE_SELECTOR));
+    return Boolean(
+      options.xOptimizedTranslation && document.querySelector(X_TWEET_ARTICLE_SELECTOR)
+    );
   },
   collectBlocks(document, options) {
     const articleBlocks = collectArticleBlocks(document, options);
     if (articleBlocks.length > 0) {
       return articleBlocks;
     }
-    return Array.from(document.querySelectorAll<HTMLElement>(X_TWEET_TEXT_SELECTOR)).flatMap((element) =>
-      getTranslatableTweetTextBlocks(element, document, options)
+    return Array.from(document.querySelectorAll<HTMLElement>(X_TWEET_TEXT_SELECTOR)).flatMap(
+      (element) => getTranslatableTweetTextBlocks(element, document, options)
     );
   }
 };
@@ -40,12 +42,12 @@ function collectArticleBlocks(document: Document, options: TextBlockOptions): HT
     return [];
   }
 
-  const titleBlocks = Array.from(document.querySelectorAll<HTMLElement>(X_ARTICLE_TITLE_SELECTOR)).filter((element) =>
-    isArticleTextBlock(element, options)
-  );
-  const richTextBlocks = Array.from(document.querySelectorAll<HTMLElement>(X_ARTICLE_BLOCK_SELECTOR)).filter((element) =>
-    isArticleTextBlock(element, options)
-  );
+  const titleBlocks = Array.from(
+    document.querySelectorAll<HTMLElement>(X_ARTICLE_TITLE_SELECTOR)
+  ).filter((element) => isArticleTextBlock(element, options));
+  const richTextBlocks = Array.from(
+    document.querySelectorAll<HTMLElement>(X_ARTICLE_BLOCK_SELECTOR)
+  ).filter((element) => isArticleTextBlock(element, options));
 
   return [...titleBlocks, ...richTextBlocks];
 }
@@ -118,7 +120,11 @@ function isInsideQuotedPost(element: HTMLElement, article: HTMLElement): boolean
 
 function hasNativeXTranslationMarker(article: HTMLElement, textElement: HTMLElement): boolean {
   return Array.from(article.querySelectorAll<HTMLElement>("div, span")).some((element) => {
-    if (element === textElement || textElement.contains(element) || isInsideQuotedPost(element, article)) {
+    if (
+      element === textElement ||
+      textElement.contains(element) ||
+      isInsideQuotedPost(element, article)
+    ) {
       return false;
     }
     return /Translated from\s+\w+/i.test(element.innerText);
@@ -126,11 +132,17 @@ function hasNativeXTranslationMarker(article: HTMLElement, textElement: HTMLElem
 }
 
 function isEligibleTweetTextContainer(element: HTMLElement, options: TextBlockOptions): boolean {
-  if (element.hasAttribute(options.translatedAttr) || element.closest(`.${options.translationClass}`)) {
+  if (
+    element.hasAttribute(options.translatedAttr) ||
+    element.closest(`.${options.translationClass}`)
+  ) {
     return false;
   }
 
-  if (shouldSkipElement(element, options) || element.querySelector("input, textarea, select, button")) {
+  if (
+    shouldSkipElement(element, options) ||
+    element.querySelector("input, textarea, select, button")
+  ) {
     return false;
   }
 
@@ -191,7 +203,10 @@ function createTweetParagraphBlock(document: Document, index: number): HTMLEleme
   return block;
 }
 
-function splitNodeByParagraphBreaks(node: ChildNode, document: Document): Array<ChildNode | "paragraph-break"> {
+function splitNodeByParagraphBreaks(
+  node: ChildNode,
+  document: Document
+): Array<ChildNode | "paragraph-break"> {
   if (node.nodeType === Node.TEXT_NODE) {
     return splitTextByParagraphBreaks(node.textContent ?? "", document);
   }
@@ -209,11 +224,19 @@ function splitNodeByParagraphBreaks(node: ChildNode, document: Document): Array<
 }
 
 function isPlainTextInlineElement(element: HTMLElement): boolean {
-  return element.children.length === 0 && !element.matches("a, button, input, textarea, select, svg, img, video");
+  return (
+    element.children.length === 0 &&
+    !element.matches("a, button, input, textarea, select, svg, img, video")
+  );
 }
 
-function getExistingTweetParagraphBlocks(container: HTMLElement, options: TextBlockOptions): HTMLElement[] {
+function getExistingTweetParagraphBlocks(
+  container: HTMLElement,
+  options: TextBlockOptions
+): HTMLElement[] {
   return Array.from(
-    container.querySelectorAll<HTMLElement>(`[data-${toKebabCase(X_TWEET_PARAGRAPH_BLOCK_DATASET)}="true"]`)
+    container.querySelectorAll<HTMLElement>(
+      `[data-${toKebabCase(X_TWEET_PARAGRAPH_BLOCK_DATASET)}="true"]`
+    )
   ).filter((element) => isTranslatableElement(element, options));
 }

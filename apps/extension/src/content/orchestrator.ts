@@ -1,6 +1,11 @@
 import { isLocalTranslationProvider } from "../shared/localProviders";
 import { normalizeText } from "../shared/text";
-import type { ExtensionSettings, PageDebugState, TranslationProviderId, TranslationResult } from "../shared/types";
+import type {
+  ExtensionSettings,
+  PageDebugState,
+  TranslationProviderId,
+  TranslationResult
+} from "../shared/types";
 import type { BlockCandidate } from "./blockCandidates";
 import { type TranslationDisplayStyle } from "./displayStyle";
 import { createIncludedBlockCandidates } from "./extraction/shared";
@@ -15,7 +20,12 @@ import {
   createTranslationRenderer,
   type TranslationRenderer
 } from "./translationRenderer";
-import { compareQueueItems, TranslationQueue, type QueuePriority, type TranslationQueueItem } from "./translationQueue";
+import {
+  compareQueueItems,
+  TranslationQueue,
+  type QueuePriority,
+  type TranslationQueueItem
+} from "./translationQueue";
 
 const MIN_TEXT_LENGTH = 24;
 const BATCH_SIZE = 6;
@@ -194,7 +204,10 @@ export function createOrchestrator(options: ContentOrchestratorOptions): Content
       ? createIncludedBlockCandidates(adapterResult.blocks, "adapter", textBlockOptions)
       : collectBlockCandidates(document, textBlockOptions);
     rememberCandidates(candidates);
-    const initialQueueItems = candidates.map(createQueueItem).sort(compareQueueItems).slice(0, INITIAL_QUEUE_LIMIT);
+    const initialQueueItems = candidates
+      .map(createQueueItem)
+      .sort(compareQueueItems)
+      .slice(0, INITIAL_QUEUE_LIMIT);
     debugState.lastScanAt = Date.now();
     debugState.detectedBlocks = candidates.length;
     debugState.enqueuedBlocks += initialQueueItems.length;
@@ -280,7 +293,8 @@ export function createOrchestrator(options: ContentOrchestratorOptions): Content
           .filter((entry) => entry.isIntersecting)
           .map((entry) => entry.target)
           .filter(
-            (target): target is HTMLElement => target instanceof HTMLElement && !target.hasAttribute(TRANSLATED_ATTR)
+            (target): target is HTMLElement =>
+              target instanceof HTMLElement && !target.hasAttribute(TRANSLATED_ATTR)
           )
           .map((element) => candidateByElement.get(element))
           .filter((candidate): candidate is BlockCandidate => Boolean(candidate));
@@ -444,7 +458,10 @@ function getQueuePriority(element: HTMLElement): QueuePriority {
   if (rect.bottom >= 0 && rect.top <= viewportHeight) {
     return 0;
   }
-  if (rect.top <= viewportHeight * (1 + NEAR_VIEWPORT_MULTIPLIER) && rect.bottom >= -viewportHeight * NEAR_VIEWPORT_MULTIPLIER) {
+  if (
+    rect.top <= viewportHeight * (1 + NEAR_VIEWPORT_MULTIPLIER) &&
+    rect.bottom >= -viewportHeight * NEAR_VIEWPORT_MULTIPLIER
+  ) {
     return 1;
   }
   return 2;
@@ -486,7 +503,10 @@ function isMarginManagedNode(node: Node): boolean {
   );
 }
 
-function getSiblingText(element: HTMLElement, key: "previousElementSibling" | "nextElementSibling"): string | undefined {
+function getSiblingText(
+  element: HTMLElement,
+  key: "previousElementSibling" | "nextElementSibling"
+): string | undefined {
   const sibling = element[key];
   if (!(sibling instanceof HTMLElement)) {
     return undefined;
@@ -494,7 +514,6 @@ function getSiblingText(element: HTMLElement, key: "previousElementSibling" | "n
   const text = normalizeText(sibling.innerText);
   return text.length > 0 ? text.slice(0, 280) : undefined;
 }
-
 
 function getSampleText(candidates: BlockCandidate[]): string | undefined {
   const sample = candidates.map((candidate) => candidate.text).find((text) => text.length > 0);

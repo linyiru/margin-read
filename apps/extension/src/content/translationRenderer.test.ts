@@ -13,7 +13,11 @@ let blockMap: Map<string, HTMLElement>;
 let onRetry: ReturnType<typeof vi.fn<(block: HTMLElement) => void>>;
 let renderer: TranslationRenderer;
 
-function appendBlock(id: string, text = "Source text", attrs: Record<string, string> = {}): HTMLElement {
+function appendBlock(
+  id: string,
+  text = "Source text",
+  attrs: Record<string, string> = {}
+): HTMLElement {
   const element = document.createElement("p");
   element.textContent = text;
   element.setAttribute(BLOCK_ID_ATTR, id);
@@ -32,7 +36,8 @@ function getTranslation(source: HTMLElement): HTMLElement | null {
 
 function getNestedTranslation(source: HTMLElement): HTMLElement | null {
   const child = Array.from(source.children).find(
-    (element): element is HTMLElement => element instanceof HTMLElement && element.classList.contains(TRANSLATION_CLASS)
+    (element): element is HTMLElement =>
+      element instanceof HTMLElement && element.classList.contains(TRANSLATION_CLASS)
   );
   return child ?? null;
 }
@@ -229,9 +234,13 @@ describe("display style handling", () => {
     renderer.insertPendingState([pendingBlock]);
     renderer.insertErrorState([errorBlock], "Provider request failed.");
 
-    expect(getTranslation(pendingBlock)?.classList.contains("margin-translation--labeled")).toBe(false);
+    expect(getTranslation(pendingBlock)?.classList.contains("margin-translation--labeled")).toBe(
+      false
+    );
     expect(getTranslation(pendingBlock)?.dataset.marginLabel).toBeUndefined();
-    expect(getTranslation(errorBlock)?.classList.contains("margin-translation--labeled")).toBe(false);
+    expect(getTranslation(errorBlock)?.classList.contains("margin-translation--labeled")).toBe(
+      false
+    );
     expect(getTranslation(errorBlock)?.dataset.marginLabel).toBeUndefined();
   });
 });

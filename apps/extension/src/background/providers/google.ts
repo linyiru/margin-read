@@ -1,5 +1,10 @@
 import type { Content, GenerateContentResponse, GenerationConfig, Model } from "@google/genai";
-import type { ExtensionSettings, ProviderModel, TextSegment, TranslationResult } from "../../shared/types";
+import type {
+  ExtensionSettings,
+  ProviderModel,
+  TextSegment,
+  TranslationResult
+} from "../../shared/types";
 import {
   assertProviderResponse,
   buildTranslationPayload,
@@ -76,7 +81,9 @@ async function listGoogleModels(settings: ExtensionSettings): Promise<ProviderMo
   const payload = (await response.json()) as GeminiModelListResponse;
   return (payload.models ?? [])
     .filter(
-      (model): model is { name: string; displayName?: string; supportedGenerationMethods?: string[] } =>
+      (
+        model
+      ): model is { name: string; displayName?: string; supportedGenerationMethods?: string[] } =>
         typeof model.name === "string" &&
         model.name.length > 0 &&
         (model.supportedGenerationMethods?.includes("generateContent") ?? true)

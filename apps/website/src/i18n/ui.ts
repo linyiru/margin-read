@@ -52,8 +52,7 @@ export const ui = {
       "大多數翻譯外掛把整頁取代。Margin 反其道而行——原文留下，譯文一段一段在下方長出來。",
     "hero.hp_p2":
       "When the original is one glance away, you verify a translated phrase the moment it feels off.",
-    "hero.hp_p2z":
-      "當原文只在一瞥之間，你能在感覺翻譯不對勁的瞬間立刻驗證。",
+    "hero.hp_p2z": "當原文只在一瞥之間，你能在感覺翻譯不對勁的瞬間立刻驗證。",
     "hero.hp_cap1": "● TRANSLATED IN-PLACE",
     "hero.hp_cap2": "PARAGRAPH × PARAGRAPH",
     "hero.fig": "FIG. 01",
@@ -69,10 +68,8 @@ export const ui = {
     "demo.translate": "Translate this page",
     "demo.translated": "Translated ✓",
     "demo.meta": "arXiv · cs.CL · 2024",
-    "demo.title":
-      "Mixture of Experts: A Practical Survey for Long-Context Language Models",
-    "demo.byline":
-      "— Jan Smolinski, Yuki Tanaka, Marina Reyes · saved 12 min ago",
+    "demo.title": "Mixture of Experts: A Practical Survey for Long-Context Language Models",
+    "demo.byline": "— Jan Smolinski, Yuki Tanaka, Marina Reyes · saved 12 min ago",
     "demo.p1":
       "Most translation extensions replace the page. You scroll, you read, and somewhere along the way you forget which language you started in. Margin does the opposite: the original text stays exactly where it was, and the translation slides in beneath, paragraph by paragraph.",
     "demo.p1_zh":
@@ -138,8 +135,7 @@ export const ui = {
     "priv.p1b":
       "All provider requests come directly from the extension's service worker. There's no us in the middle, and no proxy layer.",
     "priv.p2t": "No login, no account",
-    "priv.p2b":
-      'No signup flow, no OAuth, no cloud sync. Your browser profile is your "account."',
+    "priv.p2b": 'No signup flow, no OAuth, no cloud sync. Your browser profile is your "account."',
     "priv.p3t": "No telemetry by default",
     "priv.p3b":
       "No analytics, no error reporting, no usage events. Debug info shows up only in the popup's debug mode, locally.",
@@ -173,8 +169,7 @@ export const ui = {
     "dis.b_t": "Highlighter strip",
     "dis.b_b":
       "Translation rides a strip of butter-yellow highlight, the way you'd mark a key sentence in a print book. Best for language learning, side-by-side comparison, or finding translations fast in dense layouts.",
-    "dis.src":
-      "Most translation extensions replace the page. Margin does the opposite.",
+    "dis.src": "Most translation extensions replace the page. Margin does the opposite.",
     "dis.tr": "大多數翻譯外掛會把整頁取代。Margin 反其道而行。",
 
     "x.eye": "X (Twitter) optimization",
@@ -255,8 +250,7 @@ export const ui = {
     "faq.t1": "Questions, before you",
     "faq.t2": "install",
     "faq.t3": ".",
-    "faq.lede":
-      "A short list. Longer answers live in the docs/ directory of the repository.",
+    "faq.lede": "A short list. Longer answers live in the docs/ directory of the repository.",
     "faq.q1": "Why bring your own API key?",
     "faq.a1":
       "Cloud translation services route every paragraph you read through their servers, where it can be logged, analyzed, or used for training. With BYO-key, your reading is sent only to the provider you already chose to trust. Margin itself sees nothing.",
@@ -290,12 +284,11 @@ export const ui = {
     "ft.styles": "Display styles",
     "ft.priv": "Privacy-first · Open source · MIT",
     "ft.priv_policy": "Privacy Policy",
-    "ft.tos": "Terms of Service",
+    "ft.tos": "Terms of Service"
   },
   "zh-hant": {
     "html.title": "Margin — 雙語對照閱讀網頁",
-    "html.description":
-      "隱私優先的雙語對照翻譯瀏覽器外掛。原文留下，譯文長在下方。自帶 API Key。",
+    "html.description": "隱私優先的雙語對照翻譯瀏覽器外掛。原文留下，譯文長在下方。自帶 API Key。",
 
     "nav.demo": "如何運作",
     "nav.features": "功能",
@@ -311,7 +304,8 @@ export const ui = {
     "hero.t2": "原文如故",
     "hero.t3": "。",
     "hero.p1": "無需帳號、立即可用。",
-    "hero.p2": "翻譯從你的瀏覽器直送 OpenAI、Anthropic、Google — 中間沒有我們。全程 MIT 開源。真正保有你的瀏覽與閱讀隱私。",
+    "hero.p2":
+      "翻譯從你的瀏覽器直送 OpenAI、Anthropic、Google — 中間沒有我們。全程 MIT 開源。真正保有你的瀏覽與閱讀隱私。",
     "hero.cta1": "加到 Chrome",
     "hero.cta1m": "Chrome Web Store · MV3",
     "hero.cta2": "追蹤更新",
@@ -333,8 +327,7 @@ export const ui = {
       "大多數翻譯外掛把整頁取代。Margin 反其道而行——原文留下，譯文一段一段在下方長出來。",
     "hero.hp_p2":
       "When the original is one glance away, you verify a translated phrase the moment it feels off.",
-    "hero.hp_p2z":
-      "當原文只在一瞥之間，你能在感覺翻譯不對勁的瞬間立刻驗證。",
+    "hero.hp_p2z": "當原文只在一瞥之間，你能在感覺翻譯不對勁的瞬間立刻驗證。",
     "hero.hp_cap1": "● TRANSLATED IN-PLACE",
     "hero.hp_cap2": "段落 × 段落",
     "hero.fig": "FIG. 01",
@@ -350,10 +343,8 @@ export const ui = {
     "demo.translate": "翻譯這個頁面",
     "demo.translated": "已翻譯 ✓",
     "demo.meta": "arXiv · cs.CL · 2024",
-    "demo.title":
-      "Mixture of Experts: A Practical Survey for Long-Context Language Models",
-    "demo.byline":
-      "— Jan Smolinski, Yuki Tanaka, Marina Reyes · 12 分鐘前儲存",
+    "demo.title": "Mixture of Experts: A Practical Survey for Long-Context Language Models",
+    "demo.byline": "— Jan Smolinski, Yuki Tanaka, Marina Reyes · 12 分鐘前儲存",
     "demo.p1":
       "Most translation extensions replace the page. You scroll, you read, and somewhere along the way you forget which language you started in. Margin does the opposite: the original text stays exactly where it was, and the translation slides in beneath, paragraph by paragraph.",
     "demo.p1_zh":
@@ -378,8 +369,7 @@ export const ui = {
     "feat.lede":
       "Margin 的設計從一個問題開始：閱讀時，何時你最需要原文？答案是「隨時」。所以原文永遠在那裡。",
     "f1.t": "雙語對照插入",
-    "f1.b":
-      "譯文不取代原文，而是緊接著原段落出現。閱讀時可隨時對照、驗證、學習。",
+    "f1.b": "譯文不取代原文，而是緊接著原段落出現。閱讀時可隨時對照、驗證、學習。",
     "f2.t": "智能文字偵測",
     "f2.b":
       "偵測段落、標題、列表、引言。跳過導覽、表單、按鈕、程式碼、隱藏文字。連 table、font、br 排版的傳統頁面都能應付。",
@@ -390,11 +380,9 @@ export const ui = {
     "f4.b":
       "沒有 Margin 伺服器、沒有帳號、沒有預設遙測。API Key 存在你的瀏覽器，請求由 service worker 直接送出。",
     "f5.t": "X / Twitter 優化",
-    "f5.b":
-      "時間軸卡片與長文章專用偵測器，只翻譯貼文本體，跳過個人名稱、互動數字、媒體控制項。",
+    "f5.b": "時間軸卡片與長文章專用偵測器，只翻譯貼文本體，跳過個人名稱、互動數字、媒體控制項。",
     "f6.t": "快取彈性",
-    "f6.b":
-      "三段式快取：預設 session、可選 persistent，或完全關閉。減少重複請求，同時保留控制權。",
+    "f6.b": "三段式快取：預設 session、可選 persistent，或完全關閉。減少重複請求，同時保留控制權。",
 
     "prov.eye": "支援的 AI 引擎",
     "prov.t1": "三個",
@@ -428,8 +416,7 @@ export const ui = {
     "priv.p4b":
       "Margin 不會把整頁 HTML 丟給 provider，只送偵測到的可讀文字區塊，並批次送出以降低延遲。",
     "priv.p5t": "API Key 只在你的瀏覽器",
-    "priv.p5b":
-      "儲存在 chrome.storage 裡，從未離開你的設定檔。請把瀏覽器 profile 視為信任邊界。",
+    "priv.p5b": "儲存在 chrome.storage 裡，從未離開你的設定檔。請把瀏覽器 profile 視為信任邊界。",
 
     "flow.title": "資料流向 / DATA FLOW",
     "flow.you": "你的瀏覽器",
@@ -454,8 +441,7 @@ export const ui = {
     "dis.b_t": "螢光劃記",
     "dis.b_b":
       "譯文鋪在一條螢光黃色塊上，像你在紙本書上用螢光筆劃過的那一行。適合語言學習、雙語對照、或在密集排版中快速辨認譯文。",
-    "dis.src":
-      "Most translation extensions replace the page. Margin does the opposite.",
+    "dis.src": "Most translation extensions replace the page. Margin does the opposite.",
     "dis.tr": "大多數翻譯外掛會把整頁取代。Margin 反其道而行。",
 
     "x.eye": "X (Twitter) 專用優化",
@@ -488,8 +474,7 @@ export const ui = {
     "tech.s1": "「No license has been selected yet.」其實已經選了 — MIT。",
     "tech.s1b":
       "Margin 是開源 MVP。歡迎 issue、PR、fork、自架。我們相信能驗證的隱私才是隱私——所以原始碼是公開的。",
-    "tech.s2b":
-      "想要貢獻？文件齊全：產品需求、原則、威脅模型、路線圖。從 docs/ 進去就對了。",
+    "tech.s2b": "想要貢獻？文件齊全：產品需求、原則、威脅模型、路線圖。從 docs/ 進去就對了。",
     "tech.repo": "github.com/withmargin/margin-read",
     "tech.stat_lang": "TypeScript",
     "tech.stat_mv3": "Manifest V3",
@@ -521,14 +506,11 @@ export const ui = {
     "price.model": "模型",
     "price.per_day": "每日",
     "price.per_month": "每月",
-    "price.n1":
-      "一篇 ≈10k 字的研究論文用 GPT-4o mini 整篇翻完，成本不到 1 美分。",
+    "price.n1": "一篇 ≈10k 字的研究論文用 GPT-4o mini 整篇翻完，成本不到 1 美分。",
     "price.n2":
       "Session cache 會避免同一次閱讀中的重複請求；若常重讀同頁，也可以自行開啟 persistent cache。",
-    "price.n3":
-      "自帶金鑰。Endpoint 可編輯——支援相容 gateway、自架 router、proxy 路由。",
-    "price.n4":
-      "Gemini 免費額度對日常閱讀夠用。多數使用者根本看不到帳單。",
+    "price.n3": "自帶金鑰。Endpoint 可編輯——支援相容 gateway、自架 router、proxy 路由。",
+    "price.n4": "Gemini 免費額度對日常閱讀夠用。多數使用者根本看不到帳單。",
 
     "faq.eye": "常見問題",
     "faq.t1": "在你安裝之前的",
@@ -557,8 +539,7 @@ export const ui = {
     "faq.a7":
       "已經上架了 — 點上方的「加到 Chrome」即可安裝。若想自行審計原始碼或跑開發版，仍可從 source 以 unpacked 載入：clone repo，進 chrome://extensions 載入即可。我們不留 email 名單。想追蹤新版本，請從 hero 區的兩個管道擇一：在 GitHub 上 Watch 這個 repo (releases only)，或訂閱 releases RSS feed。GitHub 負責寄送，我們從頭到尾不知道誰訂了。",
 
-    "ft.tag":
-      "隱私優先的雙語對照翻譯瀏覽器外掛。原文留下，譯文長在下方。自帶 API Key。",
+    "ft.tag": "隱私優先的雙語對照翻譯瀏覽器外掛。原文留下，譯文長在下方。自帶 API Key。",
     "ft.h1": "產品",
     "ft.h2": "文件",
     "ft.h3": "連結",
@@ -568,15 +549,15 @@ export const ui = {
     "ft.styles": "顯示樣式",
     "ft.priv": "隱私優先 · 開源 MIT",
     "ft.priv_policy": "隱私政策",
-    "ft.tos": "服務條款",
-  },
+    "ft.tos": "服務條款"
+  }
 } as const satisfies Record<string, Record<string, string>>;
 
 export type TranslationKey = keyof (typeof ui)["en"];
 
 export const localeLabel: Record<Locale, string> = {
   en: "EN",
-  "zh-hant": "中",
+  "zh-hant": "中"
 };
 
 // BCP 47 lang attribute per locale — used by <html lang>, hreflang, and as
@@ -584,5 +565,5 @@ export const localeLabel: Record<Locale, string> = {
 // helpers (which match against the `codes` declared in astro.config.mjs).
 export const htmlLang: Record<Locale, string> = {
   en: "en",
-  "zh-hant": "zh-Hant",
+  "zh-hant": "zh-Hant"
 };

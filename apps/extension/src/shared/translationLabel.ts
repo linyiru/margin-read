@@ -69,7 +69,7 @@ export function getBrowserTranslationLabel(): string {
   const locale =
     typeof chrome !== "undefined" && chrome.i18n?.getUILanguage
       ? chrome.i18n.getUILanguage()
-      : navigator.languages[0] ?? navigator.language;
+      : (navigator.languages[0] ?? navigator.language);
   return getTranslationLabel(locale);
 }
 
@@ -107,7 +107,8 @@ export function getTranslationLabel(languageOrLocale: string | undefined): strin
     return TRANSLATION_LABELS_BY_LOCALE.ko;
   }
 
-  const targetLocale = LOCALE_BY_TARGET_LANGUAGE[searchKey as keyof typeof LOCALE_BY_TARGET_LANGUAGE];
+  const targetLocale =
+    LOCALE_BY_TARGET_LANGUAGE[searchKey as keyof typeof LOCALE_BY_TARGET_LANGUAGE];
   const targetLabel = getLabelForLocale(targetLocale);
   if (targetLabel) {
     return targetLabel;
@@ -132,7 +133,9 @@ function getLabelForLocale(locale: string | undefined): string | undefined {
     return undefined;
   }
   const normalizedLocale = locale.toLowerCase();
-  const match = Object.entries(TRANSLATION_LABELS_BY_LOCALE).find(([key]) => key.toLowerCase() === normalizedLocale);
+  const match = Object.entries(TRANSLATION_LABELS_BY_LOCALE).find(
+    ([key]) => key.toLowerCase() === normalizedLocale
+  );
   return match?.[1];
 }
 

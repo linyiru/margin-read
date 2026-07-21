@@ -96,12 +96,17 @@ interface ListModelsResponse {
 function renderModelOptions(models: ProviderModel[], selectedModel: string): void {
   const modelSelect = document.querySelector<HTMLSelectElement>("#model-select");
   const modelOptions = models.map((model) => {
-    return createModelOption(model.id, model.displayName ? `${model.displayName} (${model.id})` : model.id);
+    return createModelOption(
+      model.id,
+      model.displayName ? `${model.displayName} (${model.id})` : model.id
+    );
   });
   const hasSelectedModel = modelOptions.some((option) => option.value === selectedModel);
   modelSelect?.replaceChildren(
     createModelOption("", msg("modelDefault")),
-    ...(selectedModel && !hasSelectedModel ? [createModelOption(selectedModel, selectedModel)] : []),
+    ...(selectedModel && !hasSelectedModel
+      ? [createModelOption(selectedModel, selectedModel)]
+      : []),
     ...modelOptions
   );
   if (modelSelect && selectedModel) {

@@ -14,7 +14,10 @@ export interface SiteAdapterResult {
   blocks: HTMLElement[];
 }
 
-export function collectSiteAdapterBlocks(document: Document, options: TextBlockOptions): SiteAdapterResult {
+export function collectSiteAdapterBlocks(
+  document: Document,
+  options: TextBlockOptions
+): SiteAdapterResult {
   let matched = false;
   for (const adapter of siteAdapters) {
     if (!adapter.matches(document, options)) {

@@ -77,7 +77,10 @@ function initializeTargetLanguage(initialValue: string): void {
     return;
   }
 
-  initializeLanguageSelect({ input, hiddenInput, listbox, optionIdPrefix: "target-language" }, initialValue);
+  initializeLanguageSelect(
+    { input, hiddenInput, listbox, optionIdPrefix: "target-language" },
+    initialValue
+  );
 }
 
 function initializeSourceLanguage(initialValue: string): void {

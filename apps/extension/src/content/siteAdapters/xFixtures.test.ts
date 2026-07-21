@@ -3,7 +3,11 @@ import xArticleExpected from "../../../test/fixtures/extraction/site/x/article.e
 import xArticleHtml from "../../../test/fixtures/extraction/site/x/article.html?raw";
 import xLongPostExpected from "../../../test/fixtures/extraction/site/x/long-post.expected.json?raw";
 import xLongPostHtml from "../../../test/fixtures/extraction/site/x/long-post.html?raw";
-import type { BlockCandidateRole, BlockCandidateSource, BlockRenderStrategy } from "../blockCandidates";
+import type {
+  BlockCandidateRole,
+  BlockCandidateSource,
+  BlockRenderStrategy
+} from "../blockCandidates";
 import { createIncludedBlockCandidates } from "../extraction/shared";
 import type { TextBlockOptions } from "../textBlocks";
 import { xAdapter } from "./x";
@@ -136,7 +140,9 @@ function normalize(value: string): string {
   return value.replace(/\s+/g, " ").trim();
 }
 
-function omitUndefinedProperties(shape: ExpectedBlockShape): Partial<Omit<ExpectedBlockShape, "textIncludes">> {
+function omitUndefinedProperties(
+  shape: ExpectedBlockShape
+): Partial<Omit<ExpectedBlockShape, "textIncludes">> {
   return Object.fromEntries(
     Object.entries(shape).filter(([key, value]) => key !== "textIncludes" && value !== undefined)
   );

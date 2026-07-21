@@ -5,11 +5,12 @@ import { defineConfig } from "vite";
 // The manifest references source entry points (TS/HTML); CRXJS rewrites them to the
 // built assets. The version is injected here so package.json stays the single source of
 // truth — the on-disk manifest.json never pins a version.
-const manifest = JSON.parse(readFileSync(new URL("./manifest.json", import.meta.url), "utf8")) as Record<
-  string,
-  unknown
->;
-const { version } = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as {
+const manifest = JSON.parse(
+  readFileSync(new URL("./manifest.json", import.meta.url), "utf8")
+) as Record<string, unknown>;
+const { version } = JSON.parse(
+  readFileSync(new URL("./package.json", import.meta.url), "utf8")
+) as {
   version: string;
 };
 

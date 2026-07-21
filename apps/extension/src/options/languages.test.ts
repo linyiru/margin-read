@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { filterLanguageOptions, findLanguageOption, formatLanguageOption, getPreferredLanguageOption } from "./languages";
+import {
+  filterLanguageOptions,
+  findLanguageOption,
+  formatLanguageOption,
+  getPreferredLanguageOption
+} from "./languages";
 
 describe("language options", () => {
   it("filters by native name, english name, code, and alias", () => {
@@ -20,7 +25,9 @@ describe("language options", () => {
   });
 
   it("formats native and english names for display", () => {
-    expect(formatLanguageOption(findLanguageOption("zh-TW")!)).toBe("繁體中文 / Traditional Chinese");
+    expect(formatLanguageOption(findLanguageOption("zh-TW")!)).toBe(
+      "繁體中文 / Traditional Chinese"
+    );
     expect(formatLanguageOption(findLanguageOption("English")!)).toBe("English");
   });
 });

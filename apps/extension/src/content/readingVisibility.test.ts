@@ -34,7 +34,9 @@ afterEach(() => {
 
 describe("reading visibility", () => {
   it("identifies page chrome", () => {
-    const document = createDocument("<nav><p>Navigation item with enough text for testing.</p></nav>");
+    const document = createDocument(
+      "<nav><p>Navigation item with enough text for testing.</p></nav>"
+    );
     const paragraph = getElement(document, "p");
 
     expect(isPageChromeElement(paragraph)).toBe(true);
@@ -55,7 +57,9 @@ describe("reading visibility", () => {
   });
 
   it("lets not-sr-only content remain readable", () => {
-    const document = createDocument("<main><p class=\"not-sr-only\">Visible text that should remain readable.</p></main>");
+    const document = createDocument(
+      '<main><p class="not-sr-only">Visible text that should remain readable.</p></main>'
+    );
     const paragraph = getElement(document, "p");
 
     expect(isAccessibilityOnlyElement(paragraph)).toBe(false);
@@ -63,7 +67,9 @@ describe("reading visibility", () => {
   });
 
   it("excludes display-hidden elements", () => {
-    const document = createDocument("<main><p>Hidden paragraph with enough text for testing.</p></main>");
+    const document = createDocument(
+      "<main><p>Hidden paragraph with enough text for testing.</p></main>"
+    );
     const paragraph = getElement(document, "p");
     styles.set(paragraph, { display: "none" });
 
@@ -71,7 +77,9 @@ describe("reading visibility", () => {
   });
 
   it("excludes offscreen absolute elements", () => {
-    const document = createDocument("<main><p>Offscreen paragraph with enough text for testing.</p></main>");
+    const document = createDocument(
+      "<main><p>Offscreen paragraph with enough text for testing.</p></main>"
+    );
     const paragraph = getElement(document, "p");
     styles.set(paragraph, { position: "absolute", left: "-9999px" });
 
@@ -79,7 +87,9 @@ describe("reading visibility", () => {
   });
 
   it("excludes clipped tiny elements", () => {
-    const document = createDocument("<main><p>Clipped paragraph with enough text for testing.</p></main>");
+    const document = createDocument(
+      "<main><p>Clipped paragraph with enough text for testing.</p></main>"
+    );
     const paragraph = getElement(document, "p");
     styles.set(paragraph, {
       position: "absolute",
@@ -92,7 +102,9 @@ describe("reading visibility", () => {
   });
 
   it("excludes tiny overflow-hidden elements", () => {
-    const document = createDocument("<main><p>Tiny paragraph with enough text for testing.</p></main>");
+    const document = createDocument(
+      "<main><p>Tiny paragraph with enough text for testing.</p></main>"
+    );
     const paragraph = getElement(document, "p");
     styles.set(paragraph, {
       position: "absolute",

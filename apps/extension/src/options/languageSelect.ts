@@ -17,7 +17,10 @@ export interface LanguageSelectElements {
   optionIdPrefix?: string;
 }
 
-export function initializeLanguageSelect(elements: LanguageSelectElements, initialValue: string): LanguageSelectController {
+export function initializeLanguageSelect(
+  elements: LanguageSelectElements,
+  initialValue: string
+): LanguageSelectController {
   let options = LANGUAGE_OPTIONS;
   let activeIndex = -1;
   let open = false;
@@ -51,7 +54,10 @@ export function initializeLanguageSelect(elements: LanguageSelectElements, initi
         return item;
       })
     );
-    elements.input.setAttribute("aria-activedescendant", activeIndex >= 0 ? getOptionId(optionIdPrefix, activeIndex) : "");
+    elements.input.setAttribute(
+      "aria-activedescendant",
+      activeIndex >= 0 ? getOptionId(optionIdPrefix, activeIndex) : ""
+    );
   };
 
   const openListbox = (): void => {

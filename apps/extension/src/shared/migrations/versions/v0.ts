@@ -33,7 +33,12 @@ export interface ExtensionSettingsV0 {
   showFloatingButton?: boolean;
 }
 
-const PROVIDERS: readonly TranslationProviderIdV0[] = ["openai", "anthropic", "google", "openai-compatible"];
+const PROVIDERS: readonly TranslationProviderIdV0[] = [
+  "openai",
+  "anthropic",
+  "google",
+  "openai-compatible"
+];
 const DISPLAY_STYLES: readonly DisplayStyle[] = ["integrated", "highlighted"];
 const CACHE_MODES: readonly CacheMode[] = ["session", "persistent", "disabled"];
 

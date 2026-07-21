@@ -29,7 +29,11 @@ import headingAnchorButtonExpected from "../../test/fixtures/extraction/universa
 import headingAnchorButtonHtml from "../../test/fixtures/extraction/universal/heading-anchor-button.html?raw";
 import { collectBlockCandidates } from "./textBlocks";
 import type { TextBlockOptions } from "./textBlocks";
-import type { BlockCandidateRole, BlockCandidateSource, BlockRenderStrategy } from "./blockCandidates";
+import type {
+  BlockCandidateRole,
+  BlockCandidateSource,
+  BlockRenderStrategy
+} from "./blockCandidates";
 
 interface ExtractionFixture {
   name: string;
@@ -154,7 +158,10 @@ describe("extraction fixtures", () => {
   for (const fixture of fixtures) {
     it(`matches ${fixture.name}`, () => {
       const document = createFixtureDocument(fixture.html);
-      const candidates = collectBlockCandidates(document, { ...defaultOptions, ...fixture.options });
+      const candidates = collectBlockCandidates(document, {
+        ...defaultOptions,
+        ...fixture.options
+      });
       const actualBlocks = candidates.map((candidate) => ({
         text: candidate.text,
         role: candidate.role,
@@ -181,7 +188,9 @@ describe("extraction fixtures", () => {
       }
 
       for (const occurrence of fixture.expected.expectedOccurrences ?? []) {
-        const count = actualBlocks.filter((block) => normalize(block.text).includes(occurrence.textIncludes)).length;
+        const count = actualBlocks.filter((block) =>
+          normalize(block.text).includes(occurrence.textIncludes)
+        ).length;
         expect(
           count,
           `expected "${occurrence.textIncludes}" to appear ${occurrence.count} time(s) in ${fixture.name}, got ${count}`
@@ -225,7 +234,9 @@ function normalize(value: string): string {
   return value.replace(/\s+/g, " ").trim();
 }
 
-function omitUndefinedProperties(shape: ExpectedBlockShape): Partial<Omit<ExpectedBlockShape, "textIncludes">> {
+function omitUndefinedProperties(
+  shape: ExpectedBlockShape
+): Partial<Omit<ExpectedBlockShape, "textIncludes">> {
   return Object.fromEntries(
     Object.entries(shape).filter(([key, value]) => key !== "textIncludes" && value !== undefined)
   );

@@ -64,7 +64,10 @@ export interface BlockCandidate {
   skipReason?: BlockCandidateSkipReason;
 }
 
-export function createBlockCandidate(element: HTMLElement, source: BlockCandidateSource): BlockCandidate {
+export function createBlockCandidate(
+  element: HTMLElement,
+  source: BlockCandidateSource
+): BlockCandidate {
   const text = normalizeText(element.innerText ?? element.textContent ?? "");
   const role = inferBlockRole(element);
   const score = scoreBlockCandidate(element, text, role, source);
@@ -236,4 +239,3 @@ function hasHighLinkDensity(element: HTMLElement, text: string): boolean {
   );
   return linkTextLength / text.length > 0.55;
 }
-

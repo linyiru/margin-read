@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD, detectArticleArchetypeConfidence } from "./article";
+import {
+  ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD,
+  detectArticleArchetypeConfidence
+} from "./article";
 
 describe("detectArticleArchetypeConfidence", () => {
   it("recognizes publication article bodies", () => {
@@ -13,7 +16,9 @@ describe("detectArticleArchetypeConfidence", () => {
       </main>
     `);
 
-    expect(detectArticleArchetypeConfidence(document)).toBeGreaterThanOrEqual(ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectArticleArchetypeConfidence(document)).toBeGreaterThanOrEqual(
+      ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 
   it("does not classify ordinary semantic articles as an archetype", () => {
@@ -25,7 +30,9 @@ describe("detectArticleArchetypeConfidence", () => {
       </article>
     `);
 
-    expect(detectArticleArchetypeConfidence(document)).toBeLessThan(ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectArticleArchetypeConfidence(document)).toBeLessThan(
+      ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 
   it("does not classify a sparse article-content widget", () => {
@@ -35,7 +42,9 @@ describe("detectArticleArchetypeConfidence", () => {
       </section>
     `);
 
-    expect(detectArticleArchetypeConfidence(document)).toBeLessThan(ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD);
+    expect(detectArticleArchetypeConfidence(document)).toBeLessThan(
+      ARTICLE_ARCHETYPE_CONFIDENCE_THRESHOLD
+    );
   });
 });
 

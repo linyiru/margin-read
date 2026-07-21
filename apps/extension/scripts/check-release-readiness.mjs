@@ -24,7 +24,10 @@ const sourceManifest = await readJson(sourceManifestPath);
 const version = rootPackage.version;
 const artifactPath = join(artifactsDir, `margin-read-v${version}.zip`);
 
-const sourceMessages = await readLocaleMessages(join(root, "public/_locales"), sourceManifest.default_locale);
+const sourceMessages = await readLocaleMessages(
+  join(root, "public/_locales"),
+  sourceManifest.default_locale
+);
 
 checkVersionConsistency();
 await checkChangelog();
@@ -63,18 +66,30 @@ if (warnings.length > 0) {
 
 function checkVersionConsistency() {
   assert(isSemver(version), `root package version must be a semver version. Got ${version}.`);
-  assert(!("version" in sourceManifest), "source manifest must not pin a version; it is injected at build from package.json.");
-  assert(extensionPackage.version === version, `extension package version must match root package version ${version}.`);
+  assert(
+    !("version" in sourceManifest),
+    "source manifest must not pin a version; it is injected at build from package.json."
+  );
+  assert(
+    extensionPackage.version === version,
+    `extension package version must match root package version ${version}.`
+  );
 
   const refName = process.env.GITHUB_REF_NAME;
   if (refName?.startsWith("v")) {
-    assert(refName === `v${version}`, `release tag ${refName} must match manifest version v${version}.`);
+    assert(
+      refName === `v${version}`,
+      `release tag ${refName} must match manifest version v${version}.`
+    );
   }
 }
 
 async function checkChangelog() {
   const changelog = await readFile(changelogPath, "utf8");
-  assert(changelog.includes(`## [${version}]`), `CHANGELOG.md must contain a section for ${version}.`);
+  assert(
+    changelog.includes(`## [${version}]`),
+    `CHANGELOG.md must contain a section for ${version}.`
+  );
   assert(
     /\n## \[Unreleased\]\n/.test(changelog),
     "CHANGELOG.md must keep an [Unreleased] section."
@@ -100,10 +115,19 @@ function checkSourceManifest(manifest, label, name, description) {
     description === rootPackage.description && description === extensionPackage.description,
     `${label} description must match package descriptions.`
   );
-  assert(!manifest.content_security_policy, `${label} must not define a custom content_security_policy.`);
-  assert(!jsonContainsRemoteCodeReference(manifest), `${label} must not reference remote scripts or styles.`);
+  assert(
+    !manifest.content_security_policy,
+    `${label} must not define a custom content_security_policy.`
+  );
+  assert(
+    !jsonContainsRemoteCodeReference(manifest),
+    `${label} must not reference remote scripts or styles.`
+  );
   assert(!usesDangerousPermission(manifest), `${label} must not request high-risk permissions.`);
-  assert(hasExpectedPermissions(manifest), `${label} permissions changed; update release readiness allowlist deliberately.`);
+  assert(
+    hasExpectedPermissions(manifest),
+    `${label} permissions changed; update release readiness allowlist deliberately.`
+  );
   assert(
     manifest.background?.type === "module",
     `${label} background service worker must be an ES module.`
@@ -121,7 +145,10 @@ async function checkArtifact() {
 
   const artifact = await stat(artifactPath);
   assert(artifact.size > 0, `${relative(repoRoot, artifactPath)} must not be empty.`);
-  assert(artifact.size < 10 * 1024 * 1024, `${relative(repoRoot, artifactPath)} should stay under 10 MiB.`);
+  assert(
+    artifact.size < 10 * 1024 * 1024,
+    `${relative(repoRoot, artifactPath)} should stay under 10 MiB.`
+  );
 
   const entries = listZipEntries(artifactPath);
   if (entries.length === 0) {
@@ -142,8 +169,12 @@ async function checkArtifact() {
   // generated manifest is validated on its own merits below (MV3, name, permissions
   // allowlist, no custom CSP, no remote code, required files present).
   const { version: zipVersion } = zipManifest;
-  assert(zipVersion === version, `artifact manifest version must be ${version}. Got ${zipVersion}.`);
-  const zipMessages = readZipJson(artifactPath, `_locales/${zipManifest.default_locale}/messages.json`) ?? {};
+  assert(
+    zipVersion === version,
+    `artifact manifest version must be ${version}. Got ${zipVersion}.`
+  );
+  const zipMessages =
+    readZipJson(artifactPath, `_locales/${zipManifest.default_locale}/messages.json`) ?? {};
   checkSourceManifest(
     zipManifest,
     "artifact manifest",
@@ -192,19 +223,37 @@ function checkZipContents(entries) {
     const entry = normalizeZipEntry(rawEntry);
     assert(entry === rawEntry, `zip entry ${rawEntry} must use normalized relative paths.`);
     assert(!entry.startsWith("/"), `zip entry ${entry} must not be absolute.`);
-    assert(!entry.includes("../"), `zip entry ${entry} must not contain parent-directory traversal.`);
+    assert(
+      !entry.includes("../"),
+      `zip entry ${entry} must not contain parent-directory traversal.`
+    );
     assert(!entry.startsWith("node_modules/"), `zip entry ${entry} must not include dependencies.`);
     assert(!entry.startsWith("src/"), `zip entry ${entry} must not include source files.`);
-    assert(!entry.startsWith("test/") && !entry.startsWith("tests/"), `zip entry ${entry} must not include tests.`);
+    assert(
+      !entry.startsWith("test/") && !entry.startsWith("tests/"),
+      `zip entry ${entry} must not include tests.`
+    );
     assert(!entry.includes("__fixtures__/"), `zip entry ${entry} must not include test fixtures.`);
-    assert(!entry.startsWith(".github/"), `zip entry ${entry} must not include GitHub workflow files.`);
+    assert(
+      !entry.startsWith(".github/"),
+      `zip entry ${entry} must not include GitHub workflow files.`
+    );
     assert(!entry.startsWith("docs/"), `zip entry ${entry} must not include repository docs.`);
-    assert(!entry.startsWith("artifacts/"), `zip entry ${entry} must not include nested artifacts.`);
+    assert(
+      !entry.startsWith("artifacts/"),
+      `zip entry ${entry} must not include nested artifacts.`
+    );
     assert(!entry.endsWith(".map"), `zip entry ${entry} must not include source maps.`);
     assert(!/\.(?:ts|tsx)$/.test(entry), `zip entry ${entry} must not include TypeScript source.`);
-    assert(!/(^|\/)\.env(?:\.|$)/.test(entry), `zip entry ${entry} must not include environment files.`);
+    assert(
+      !/(^|\/)\.env(?:\.|$)/.test(entry),
+      `zip entry ${entry} must not include environment files.`
+    );
     assert(!/(^|\/)\.DS_Store$/.test(entry), `zip entry ${entry} must not include macOS metadata.`);
-    assert(!/(^|\/)package-lock\.json$/.test(entry), `zip entry ${entry} must not include lockfiles.`);
+    assert(
+      !/(^|\/)package-lock\.json$/.test(entry),
+      `zip entry ${entry} must not include lockfiles.`
+    );
     assert(!/(^|\/)pnpm-lock\.yaml$/.test(entry), `zip entry ${entry} must not include lockfiles.`);
   }
 }
@@ -218,7 +267,10 @@ function checkZipTextContents(entries) {
     const content = readZipText(artifactPath, entry);
     assert(!containsProviderApiKey(content), `${entry} appears to contain a provider API key.`);
     if (entry !== "manifest.json") {
-      assert(!/<script[^>]+src=["']https?:\/\//i.test(content), `${entry} must not load remote scripts.`);
+      assert(
+        !/<script[^>]+src=["']https?:\/\//i.test(content),
+        `${entry} must not load remote scripts.`
+      );
     }
   }
 }
@@ -246,9 +298,14 @@ function readZipJson(path, entry) {
 }
 
 function readZipText(path, entry) {
-  const result = spawnSync("unzip", ["-p", path, entry], { encoding: "utf8", maxBuffer: 20 * 1024 * 1024 });
+  const result = spawnSync("unzip", ["-p", path, entry], {
+    encoding: "utf8",
+    maxBuffer: 20 * 1024 * 1024
+  });
   if (result.status !== 0) {
-    fail(result.stderr || result.stdout || `Failed to read ${entry} from ${relative(repoRoot, path)}.`);
+    fail(
+      result.stderr || result.stdout || `Failed to read ${entry} from ${relative(repoRoot, path)}.`
+    );
     return "";
   }
   return result.stdout;
@@ -305,13 +362,26 @@ function isSemver(value) {
 function hasExpectedPermissions(value) {
   const permissions = [...(value.permissions ?? [])].sort();
   const hostPermissions = [...(value.host_permissions ?? [])].sort();
-  return JSON.stringify(permissions) === JSON.stringify(["activeTab", "storage"]) &&
-    JSON.stringify(hostPermissions) === JSON.stringify(["<all_urls>"]);
+  return (
+    JSON.stringify(permissions) === JSON.stringify(["activeTab", "storage"]) &&
+    JSON.stringify(hostPermissions) === JSON.stringify(["<all_urls>"])
+  );
 }
 
 function usesDangerousPermission(value) {
-  const permissions = new Set([...(value.permissions ?? []), ...(value.optional_permissions ?? [])]);
-  const dangerous = ["tabs", "cookies", "webRequest", "webRequestBlocking", "management", "scripting", "debugger"];
+  const permissions = new Set([
+    ...(value.permissions ?? []),
+    ...(value.optional_permissions ?? [])
+  ]);
+  const dangerous = [
+    "tabs",
+    "cookies",
+    "webRequest",
+    "webRequestBlocking",
+    "management",
+    "scripting",
+    "debugger"
+  ];
   return dangerous.some((permission) => permissions.has(permission));
 }
 
@@ -324,5 +394,9 @@ function containsProviderApiKey(content) {
   const googlePrefix = "AI" + "za";
   const anthropicPrefix = "sk-" + "ant-";
   const openAiProjectPrefix = "sk-" + "proj-";
-  return content.includes(anthropicPrefix) || content.includes(openAiProjectPrefix) || content.includes(googlePrefix);
+  return (
+    content.includes(anthropicPrefix) ||
+    content.includes(openAiProjectPrefix) ||
+    content.includes(googlePrefix)
+  );
 }

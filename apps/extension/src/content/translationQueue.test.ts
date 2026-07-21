@@ -4,14 +4,29 @@ import { compareQueueItems, TranslationQueue, type TranslationQueueItem } from "
 describe("compareQueueItems", () => {
   it("prioritizes lower priority values before distance", () => {
     const low: TranslationQueueItem<string> = { id: "low", priority: 2, distance: 0, value: "low" };
-    const high: TranslationQueueItem<string> = { id: "high", priority: 0, distance: 500, value: "high" };
+    const high: TranslationQueueItem<string> = {
+      id: "high",
+      priority: 0,
+      distance: 500,
+      value: "high"
+    };
 
     expect([low, high].sort(compareQueueItems).map((item) => item.id)).toEqual(["high", "low"]);
   });
 
   it("uses viewport distance within the same priority", () => {
-    const far: TranslationQueueItem<string> = { id: "far", priority: 1, distance: 500, value: "far" };
-    const near: TranslationQueueItem<string> = { id: "near", priority: 1, distance: 10, value: "near" };
+    const far: TranslationQueueItem<string> = {
+      id: "far",
+      priority: 1,
+      distance: 500,
+      value: "far"
+    };
+    const near: TranslationQueueItem<string> = {
+      id: "near",
+      priority: 1,
+      distance: 10,
+      value: "near"
+    };
 
     expect([far, near].sort(compareQueueItems).map((item) => item.id)).toEqual(["near", "far"]);
   });

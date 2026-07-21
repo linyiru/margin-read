@@ -14,17 +14,31 @@ const packageName = `margin-read-v${version}.zip`;
 const outputPath = join(artifacts, packageName);
 const failures = [];
 
-const name = await resolveManifestMessage(manifest.name, join(dist, "_locales"), manifest.default_locale);
+const name = await resolveManifestMessage(
+  manifest.name,
+  join(dist, "_locales"),
+  manifest.default_locale
+);
 assert(name.startsWith("Margin Read"), "dist manifest name must start with Margin Read.");
-const description = await resolveManifestMessage(manifest.description, join(dist, "_locales"), manifest.default_locale);
-assert(description.includes("Privacy-first"), "dist manifest description must include Privacy-first.");
+const description = await resolveManifestMessage(
+  manifest.description,
+  join(dist, "_locales"),
+  manifest.default_locale
+);
+assert(
+  description.includes("Privacy-first"),
+  "dist manifest description must include Privacy-first."
+);
 
 const files = await listFiles(dist);
 for (const file of files) {
   const name = relative(dist, file);
   assert(!name.startsWith("node_modules/"), `${name} must not include dependencies.`);
   assert(!name.includes(".env"), `${name} must not include environment files.`);
-  assert(!/\.(?:ts|tsx|test\.[cm]?js|test\.ts)$/.test(name), `${name} must not include source or tests.`);
+  assert(
+    !/\.(?:ts|tsx|test\.[cm]?js|test\.ts)$/.test(name),
+    `${name} must not include source or tests.`
+  );
 
   if (/\.(?:js|json|html|css)$/.test(name)) {
     const content = await readFile(file, "utf8");
@@ -86,7 +100,9 @@ async function resolveManifestMessage(value, localesDir, defaultLocale) {
   if (!match) {
     return value ?? "";
   }
-  const messages = JSON.parse(await readFile(join(localesDir, defaultLocale, "messages.json"), "utf8"));
+  const messages = JSON.parse(
+    await readFile(join(localesDir, defaultLocale, "messages.json"), "utf8")
+  );
   return messages[match[1]]?.message ?? "";
 }
 
@@ -94,7 +110,11 @@ function containsProviderApiKey(content) {
   const googlePrefix = "AI" + "za";
   const anthropicPrefix = "sk-" + "ant-";
   const openAiProjectPrefix = "sk-" + "proj-";
-  return content.includes(anthropicPrefix) || content.includes(openAiProjectPrefix) || content.includes(googlePrefix);
+  return (
+    content.includes(anthropicPrefix) ||
+    content.includes(openAiProjectPrefix) ||
+    content.includes(googlePrefix)
+  );
 }
 
 function formatBytes(bytes) {
@@ -115,7 +135,7 @@ async function listFiles(directory) {
     const path = join(directory, entry);
     const info = await stat(path);
     if (info.isDirectory()) {
-      files.push(...await listFiles(path));
+      files.push(...(await listFiles(path)));
       continue;
     }
     files.push(path);

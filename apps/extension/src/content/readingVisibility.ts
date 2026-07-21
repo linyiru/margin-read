@@ -45,7 +45,9 @@ export function isVisibleForReading(element: HTMLElement): boolean {
 }
 
 export function isAccessibilityOnlyElement(element: HTMLElement): boolean {
-  return Boolean(element.closest(ACCESSIBILITY_ONLY_SELECTOR) || hasAccessibilityOnlyAncestor(element));
+  return Boolean(
+    element.closest(ACCESSIBILITY_ONLY_SELECTOR) || hasAccessibilityOnlyAncestor(element)
+  );
 }
 
 function hasAccessibilityOnlyAncestor(element: HTMLElement): boolean {
@@ -108,7 +110,9 @@ function isClipped(clip: string | undefined, clipPath: string | undefined): bool
 function isTinyBox(width: string | undefined, height: string | undefined): boolean {
   const parsedWidth = parseCssPixels(width);
   const parsedHeight = parseCssPixels(height);
-  return parsedWidth !== undefined && parsedHeight !== undefined && parsedWidth <= 2 && parsedHeight <= 2;
+  return (
+    parsedWidth !== undefined && parsedHeight !== undefined && parsedWidth <= 2 && parsedHeight <= 2
+  );
 }
 
 function parseCssPixels(value: string | undefined): number | undefined {

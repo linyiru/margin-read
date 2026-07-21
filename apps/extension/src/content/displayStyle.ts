@@ -160,8 +160,18 @@ export function deriveIntegratedStyleTokens(
     textAlign: style.textAlign,
     color: style.color,
     maxWidth: style.maxWidth === "none" ? "" : style.maxWidth,
-    marginTop: getIntegratedMarginTop(style.marginBottom, sourceLineHeight, sourceFontSize, heading),
-    marginBottom: getIntegratedMarginBottom(style.marginBottom, sourceLineHeight, sourceFontSize, heading)
+    marginTop: getIntegratedMarginTop(
+      style.marginBottom,
+      sourceLineHeight,
+      sourceFontSize,
+      heading
+    ),
+    marginBottom: getIntegratedMarginBottom(
+      style.marginBottom,
+      sourceLineHeight,
+      sourceFontSize,
+      heading
+    )
   };
 }
 
@@ -204,7 +214,11 @@ export function getFocusFontWeight(fontWeight: string): string {
   return String(clamp(numeric, 450, 600));
 }
 
-export function getIntegratedLineHeight(lineHeight: string, sourceFontSize: number, heading: boolean): string {
+export function getIntegratedLineHeight(
+  lineHeight: string,
+  sourceFontSize: number,
+  heading: boolean
+): string {
   if (heading) {
     return "1.25";
   }
@@ -225,7 +239,10 @@ export function getIntegratedMarginTop(
 ): string {
   const marginPixels = parseCssPixels(sourceMarginBottom) ?? 0;
   const desiredGapPixels = sourceLineHeight * (heading ? 0.14 : 0.22);
-  const marginTopPixels = Math.max(desiredGapPixels - marginPixels, marginPixels > 0 ? -marginPixels + 4 : 0);
+  const marginTopPixels = Math.max(
+    desiredGapPixels - marginPixels,
+    marginPixels > 0 ? -marginPixels + 4 : 0
+  );
   return `${roundCssNumber(marginTopPixels / sourceFontSize)}em`;
 }
 
@@ -334,9 +351,9 @@ function getCjkFontFamily(languageCode: string): string {
       "system-ui",
       "-apple-system",
       "BlinkMacSystemFont",
-      "\"Hiragino Sans\"",
-      "\"Yu Gothic\"",
-      "\"Noto Sans JP\"",
+      '"Hiragino Sans"',
+      '"Yu Gothic"',
+      '"Noto Sans JP"',
       "sans-serif"
     ].join(", ");
   }
@@ -345,9 +362,9 @@ function getCjkFontFamily(languageCode: string): string {
       "system-ui",
       "-apple-system",
       "BlinkMacSystemFont",
-      "\"Apple SD Gothic Neo\"",
-      "\"Noto Sans KR\"",
-      "\"Malgun Gothic\"",
+      '"Apple SD Gothic Neo"',
+      '"Noto Sans KR"',
+      '"Malgun Gothic"',
       "sans-serif"
     ].join(", ");
   }
@@ -356,9 +373,9 @@ function getCjkFontFamily(languageCode: string): string {
       "system-ui",
       "-apple-system",
       "BlinkMacSystemFont",
-      "\"PingFang SC\"",
-      "\"Noto Sans SC\"",
-      "\"Microsoft YaHei\"",
+      '"PingFang SC"',
+      '"Noto Sans SC"',
+      '"Microsoft YaHei"',
       "sans-serif"
     ].join(", ");
   }
@@ -366,9 +383,9 @@ function getCjkFontFamily(languageCode: string): string {
     "system-ui",
     "-apple-system",
     "BlinkMacSystemFont",
-    "\"PingFang TC\"",
-    "\"Noto Sans TC\"",
-    "\"Microsoft JhengHei\"",
+    '"PingFang TC"',
+    '"Noto Sans TC"',
+    '"Microsoft JhengHei"',
     "sans-serif"
   ].join(", ");
 }
@@ -402,7 +419,9 @@ function normalizeLanguageCode(value: string): string {
 }
 
 function supportsCss(declaration: string): boolean {
-  return typeof CSS !== "undefined" && typeof CSS.supports === "function" && CSS.supports(declaration);
+  return (
+    typeof CSS !== "undefined" && typeof CSS.supports === "function" && CSS.supports(declaration)
+  );
 }
 
 function parseCssPixels(value: string): number | undefined {
@@ -414,7 +433,11 @@ function parseCssPixels(value: string): number | undefined {
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
-function getSourceLineHeightPixels(lineHeight: string, sourceFontSize: number, heading: boolean): number {
+function getSourceLineHeightPixels(
+  lineHeight: string,
+  sourceFontSize: number,
+  heading: boolean
+): number {
   const lineHeightPixels = parseCssPixels(lineHeight);
   if (lineHeightPixels !== undefined) {
     return lineHeightPixels;

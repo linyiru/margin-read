@@ -43,4 +43,3 @@ body:
       options:
         - label: I did not include API keys, private page contents, account tokens, or confidential data.
           required: true
-

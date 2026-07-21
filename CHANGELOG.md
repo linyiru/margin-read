@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded TypeScript to 7.0 (native Go compiler), cutting `tsc --noEmit` from
+  ~4.7s to ~1.4s. Adjusted three `Element.matches("<tag>")` call sites where the
+  new lib.dom `this is` narrowing collapsed `HTMLElement` to `never`.
+- Replaced ESLint + typescript-eslint with oxlint (type-aware linting via
+  `oxlint-tsgolint`), preserving the same rule set including
+  `no-floating-promises` and the `no-unsafe-*` family. Lint now runs in ~1s.
+- Adopted oxfmt as the repository formatter (Prettier-compatible,
+  `printWidth: 100`, no trailing commas). Markdown files and extraction test
+  fixtures are excluded. CI now enforces `oxfmt --check`.
+
 ## [0.3.7] - 2026-06-15
 
 ### Fixed

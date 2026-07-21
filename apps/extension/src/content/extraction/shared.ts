@@ -187,7 +187,13 @@ export function splitContainerInlineRuns(
   let currentNodes: ChildNode[] = [];
 
   const flush = (): void => {
-    const block = createSplitBlock(container, currentNodes, document, options, "marginInlineRunBlock");
+    const block = createSplitBlock(
+      container,
+      currentNodes,
+      document,
+      options,
+      "marginInlineRunBlock"
+    );
     currentNodes = [];
     if (block) {
       blocks.push(block);
@@ -221,7 +227,10 @@ function createSplitBlock(
   }
 
   const text = normalizeText(nodes.map((node) => getSplitNodeText(node, options)).join(" "));
-  if (countCodePoints(text) < getMinimumTextLengthForText(text, options) || text.length > MAX_TEXT_LENGTH) {
+  if (
+    countCodePoints(text) < getMinimumTextLengthForText(text, options) ||
+    text.length > MAX_TEXT_LENGTH
+  ) {
     return undefined;
   }
 
@@ -243,7 +252,9 @@ function createSplitBlock(
 }
 
 function isInlineRunSeparator(node: ChildNode): boolean {
-  return node.nodeType === Node.ELEMENT_NODE && INLINE_RUN_SEPARATOR_TAGS.has((node as Element).tagName);
+  return (
+    node.nodeType === Node.ELEMENT_NODE && INLINE_RUN_SEPARATOR_TAGS.has((node as Element).tagName)
+  );
 }
 
 export function isBrSeparatedContainer(element: HTMLElement, options: TextBlockOptions): boolean {
@@ -261,11 +272,17 @@ export function isBrSeparatedContainer(element: HTMLElement, options: TextBlockO
   return breakCount >= 3 && countCodePoints(text) > getBaseMinimumTextLength(text, options) * 3;
 }
 
-export function filterCandidateElements(elements: HTMLElement[], source: BlockCandidateSource): HTMLElement[] {
+export function filterCandidateElements(
+  elements: HTMLElement[],
+  source: BlockCandidateSource
+): HTMLElement[] {
   return elements.filter((element) => shouldIncludeCandidate(element, source));
 }
 
-export function createBlockCandidates(elements: HTMLElement[], source: BlockCandidateSource): BlockCandidate[] {
+export function createBlockCandidates(
+  elements: HTMLElement[],
+  source: BlockCandidateSource
+): BlockCandidate[] {
   return elements.map((element) => createBlockCandidate(element, source));
 }
 
@@ -274,7 +291,9 @@ export function createIncludedBlockCandidates(
   source: BlockCandidateSource,
   options: TextBlockOptions
 ): BlockCandidate[] {
-  const includedCandidates = createBlockCandidates(elements, source).filter((candidate) => !candidate.skipReason);
+  const includedCandidates = createBlockCandidates(elements, source).filter(
+    (candidate) => !candidate.skipReason
+  );
   return removeCoveredAncestorCandidates(includedCandidates, options);
 }
 
@@ -282,10 +301,15 @@ export function removeCoveredAncestorCandidates(
   candidates: BlockCandidate[],
   options: TextBlockOptions
 ): BlockCandidate[] {
-  return candidates.filter((candidate) => !isTextFullyCoveredByDescendantCandidates(candidate, candidates, options));
+  return candidates.filter(
+    (candidate) => !isTextFullyCoveredByDescendantCandidates(candidate, candidates, options)
+  );
 }
 
-export function shouldIncludeCandidate(element: HTMLElement, source: BlockCandidateSource): boolean {
+export function shouldIncludeCandidate(
+  element: HTMLElement,
+  source: BlockCandidateSource
+): boolean {
   const candidate = createBlockCandidate(element, source);
   return !candidate.skipReason;
 }
@@ -318,14 +342,17 @@ function isTextFullyCoveredByDescendantCandidates(
   options: TextBlockOptions
 ): boolean {
   const descendantCandidates = candidates.filter(
-    (otherCandidate) => otherCandidate !== candidate && candidate.element.contains(otherCandidate.element)
+    (otherCandidate) =>
+      otherCandidate !== candidate && candidate.element.contains(otherCandidate.element)
   );
   if (descendantCandidates.length === 0) {
     return false;
   }
 
   // Fast path: the descendants reproduce the parent's text exactly — it owns nothing extra.
-  const descendantText = normalizeText(descendantCandidates.map((descendant) => descendant.text).join(" "));
+  const descendantText = normalizeText(
+    descendantCandidates.map((descendant) => descendant.text).join(" ")
+  );
   if (descendantText === candidate.text) {
     return true;
   }
@@ -354,11 +381,19 @@ function getOwnResidualText(parentText: string, descendants: BlockCandidate[]): 
   return normalizeText(residual);
 }
 
-function getMinimumTextLength(element: HTMLElement, text: string, options: TextBlockOptions): number {
+function getMinimumTextLength(
+  element: HTMLElement,
+  text: string,
+  options: TextBlockOptions
+): number {
   return applyCjkMinimum(text, getStructuralMinimumTextLength(element, text, options));
 }
 
-function getStructuralMinimumTextLength(element: HTMLElement, text: string, options: TextBlockOptions): number {
+function getStructuralMinimumTextLength(
+  element: HTMLElement,
+  text: string,
+  options: TextBlockOptions
+): number {
   if (isHeadingElement(element) || element.matches("th")) {
     return 2;
   }
@@ -385,7 +420,9 @@ function applyCjkMinimum(text: string, base: number): number {
   // A sentence terminator or full quotation enclosure both mark a complete utterance,
   // so even very short lines (e.g. 「ちぇー」) are allowed.
   const isCompleteUtterance = hasCjkSentenceTerminator(text) || isCjkQuotedText(text);
-  const cjkMinimum = isCompleteUtterance ? CJK_MIN_TEXT_LENGTH_WITH_TERMINATOR : CJK_MIN_TEXT_LENGTH;
+  const cjkMinimum = isCompleteUtterance
+    ? CJK_MIN_TEXT_LENGTH_WITH_TERMINATOR
+    : CJK_MIN_TEXT_LENGTH;
   return Math.min(base, cjkMinimum);
 }
 
@@ -418,7 +455,9 @@ function isHeadingElement(element: HTMLElement): boolean {
 }
 
 function isShortLeadInParagraph(element: HTMLElement, text: string): boolean {
-  return element.matches("p") && text.length <= 80 && /[:：]$/.test(text) && !element.querySelector("a");
+  return (
+    element.matches("p") && text.length <= 80 && /[:：]$/.test(text) && !element.querySelector("a")
+  );
 }
 
 function trimParagraphBoundaryBreaks(text: string): string {
@@ -430,15 +469,24 @@ function getSplitNodeText(node: ChildNode, options: TextBlockOptions): string {
     return node.textContent ?? "";
   }
 
-  if (node instanceof HTMLElement && !shouldSkipElement(node, options) && !node.matches("script, style, noscript")) {
+  if (
+    node instanceof HTMLElement &&
+    !shouldSkipElement(node, options) &&
+    !node.matches("script, style, noscript")
+  ) {
     return node.innerText;
   }
 
   return "";
 }
 
-function getExistingSplitBlocks(container: HTMLElement, datasetKey: SplitDatasetKey): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(`[data-${toKebabCase(datasetKey)}="true"]`));
+function getExistingSplitBlocks(
+  container: HTMLElement,
+  datasetKey: SplitDatasetKey
+): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(`[data-${toKebabCase(datasetKey)}="true"]`)
+  );
 }
 
 function isBreakElement(node: ChildNode): boolean {
